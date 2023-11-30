@@ -13,10 +13,6 @@ class Ball(context: Context,var posX: Float, var posY: Float, var size: Float, v
 
     var paint = Paint()
 
-    var width = 300f
-    var height = 50f
-
-
     lateinit var ballAsteroid: RectF
 
 
@@ -36,12 +32,12 @@ class Ball(context: Context,var posX: Float, var posY: Float, var size: Float, v
         ballAsteroid = RectF(posX - size, posY - size, posX + size , posY + size)
         canvas?.drawBitmap(bitmap, posX - size / 2, posY - size / 2, paint)
     }
-    fun checkBounds(bounds: Rect){
+    fun seeCage(limit: Rect){
         if(posX - size < 0){
             speedX *= -1
 
         }
-        if(posX + size > bounds.right){
+        if(posX + size > limit.right){
             speedX *= -1
 
         }
@@ -50,7 +46,7 @@ class Ball(context: Context,var posX: Float, var posY: Float, var size: Float, v
 
         }
         //MOVED THIS TO GAME VIEW TO BE ABLE TO STOP GAME LOOP
-        if (posY + size > bounds.bottom){
+        if (posY + size > limit.bottom){
             //speedY *= -1
 
 
