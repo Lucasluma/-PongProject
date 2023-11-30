@@ -10,8 +10,8 @@ import android.graphics.RectF
 class Paddle(context: Context) {
     var posX = 0f
     var posY = 0f
-    var width = 300f
-    var height = 50f
+    var width = 400f
+    var height = 300f
     var paint = Paint()
 
     private lateinit var paddle: RectF

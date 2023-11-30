@@ -7,6 +7,7 @@ import android.graphics.Canvas
 import android.graphics.Rect
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.MotionEvent
 import android.view.SurfaceHolder
 import android.view.SurfaceView
 
@@ -17,17 +18,24 @@ class PongGameActivity(context: Context) : SurfaceView(context), SurfaceHolder.C
     private lateinit var canvas: Canvas
     private lateinit var paddle: Paddle
     private lateinit var ball: Ball
-    private var bounds = Rect()
+    private var limit = Rect()
     private var mHolder: SurfaceHolder? = holder
-    // paddel spökar lite med draw den går via background call just nu skall se över!
-    private var background: Bitmap = BitmapFactory.decodeResource(context.resources, R.drawable.paddel)
-    private var background1: Bitmap = BitmapFactory.decodeResource(context.resources, R.drawable.stars)
+
+    private var background1: Bitmap =
+        BitmapFactory.decodeResource(context.resources, R.drawable.stars)
 
     init {
         if (mHolder != null) {
             mHolder!!.addCallback(this)
         }
         setup()
+    }
+    override fun onTouchEvent(event: MotionEvent?): Boolean {
+
+        paddle.posX = event!!.x
+        paddle.posY = event.y
+
+        return true
     }
 
     private fun setup() {
@@ -54,6 +62,7 @@ class PongGameActivity(context: Context) : SurfaceView(context), SurfaceHolder.C
             e.printStackTrace()
         }
     }
+
     fun toggleGameState() {
         if (running) {
             stop()
@@ -63,16 +72,20 @@ class PongGameActivity(context: Context) : SurfaceView(context), SurfaceHolder.C
     }
 
     override fun surfaceCreated(holder: SurfaceHolder) {
-    // Perform any initialization related to the surface creation here
+        // Perform any initialization related to the surface creation here
 
     }
 
-    override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {
-        // Perform any actions needed when the surface changes (e.g., resizing)
-        bounds = Rect(0, 0, 0, 0)
+    override fun surfaceChanged(p0: SurfaceHolder, p1: Int, p2: Int, p3: Int) {
 
-        paddle.posY = bounds.bottom.toFloat() - 100f
+        limit = Rect(0, 0, p2, p3)
+
+        paddle.posY = limit.bottom.toFloat() - 100f
+
+        paddle.posX = limit.bottom.toFloat() - 100f
+
         start()
+       // toggleGameState()
     }
 
     override fun surfaceDestroyed(holder: SurfaceHolder) {
@@ -87,11 +100,13 @@ class PongGameActivity(context: Context) : SurfaceView(context), SurfaceHolder.C
 
             // Draw on the canvas
             canvas.drawBitmap(background1, matrix, null)
-            canvas.drawBitmap(background,matrix,null)
             paddle.draw(canvas)
             ball.draw(canvas)
             mHolder!!.unlockCanvasAndPost(canvas)
-
+            ball.seeCage(limit)
         }
     }
+
 }
+
+
