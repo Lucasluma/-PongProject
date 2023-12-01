@@ -8,8 +8,8 @@ import android.graphics.Paint
 import android.graphics.Rect
 import android.graphics.RectF
 
-class Ball(context: Context,var posX: Float, var posY: Float, var size: Float, var speedX: Float,
-                                                                                var speedY: Float) {
+class Ball(context: Context, var posX: Float, var posY: Float, var size: Float, var speedX: Float,
+           var speedY: Float) {
 
     var paint = Paint()
 
