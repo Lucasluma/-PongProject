@@ -5,13 +5,11 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.Rect
-import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
 import android.view.MotionEvent
 import android.view.SurfaceHolder
 import android.view.SurfaceView
 
-class PongGameActivity(context: Context) : SurfaceView(context), SurfaceHolder.Callback, Runnable {
+class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback, Runnable {
 
     private var thread: Thread? = null
     private var running = false
@@ -24,19 +22,41 @@ class PongGameActivity(context: Context) : SurfaceView(context), SurfaceHolder.C
     private var background1: Bitmap =
         BitmapFactory.decodeResource(context.resources, R.drawable.stars)
 
+
+    var gameActivity = context as? GameActivity
+
+
+    init {
+        if (context is GameActivity) {
+            gameActivity = context
+        }
+
+        setup()
+    }
+
     init {
         if (mHolder != null) {
             mHolder!!.addCallback(this)
         }
-        setup()
-    }
-    override fun onTouchEvent(event: MotionEvent?): Boolean {
 
-        paddle.posX = event!!.x
-        paddle.posY = event.y
+    }
+    // paddeln är ej låst i vertikalt läge måste lösas!
+    override fun onTouchEvent(event: MotionEvent?): Boolean {
+        paddle.posY = event!!.y
+        paddle.posX = event.x
+
+        //Sets the position of paddle to right of screen if paddle goes "outside" screen
+        if (paddle.posX + paddle.width > limit.right) {
+            paddle.posX = limit.right.toFloat() - paddle.width
+            paddle.posY = limit.bottom.toFloat() - paddle.width
+
+        }
 
         return true
     }
+
+
+
 
     private fun setup() {
         paddle = Paddle(this.context)
@@ -73,7 +93,7 @@ class PongGameActivity(context: Context) : SurfaceView(context), SurfaceHolder.C
 
     override fun surfaceCreated(holder: SurfaceHolder) {
         // Perform any initialization related to the surface creation here
-
+        start()
     }
 
     override fun surfaceChanged(p0: SurfaceHolder, p1: Int, p2: Int, p3: Int) {
@@ -84,8 +104,8 @@ class PongGameActivity(context: Context) : SurfaceView(context), SurfaceHolder.C
 
         paddle.posX = limit.bottom.toFloat() - 100f
 
-        start()
-       // toggleGameState()
+
+        // toggleGameState()
     }
 
     override fun surfaceDestroyed(holder: SurfaceHolder) {
@@ -98,15 +118,14 @@ class PongGameActivity(context: Context) : SurfaceView(context), SurfaceHolder.C
             // Lock the canvas before drawing
             canvas = mHolder!!.lockCanvas()
 
-            // Draw on the canvas
-            canvas.drawBitmap(background1, matrix, null)
-            paddle.draw(canvas)
-            ball.draw(canvas)
-            mHolder!!.unlockCanvasAndPost(canvas)
-            ball.seeCage(limit)
+            if (canvas != null) {
+                // Draw on the canvas
+                canvas.drawBitmap(background1, matrix, null)
+                paddle.draw(canvas)
+                ball.draw(canvas)
+                mHolder!!.unlockCanvasAndPost(canvas)
+                ball.seeCage(limit)
+            }
         }
     }
-
 }
-
-
