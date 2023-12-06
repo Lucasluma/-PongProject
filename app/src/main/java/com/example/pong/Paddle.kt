@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Canvas
+import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.RectF
 
@@ -12,13 +13,14 @@ class Paddle(context: Context) {
     var posY = 500f
     var width = 400f
     var height = 300f
-    var paint = Paint()
-
+    var paint =  Paint()
     private lateinit var paddle: RectF
 
 
     // Bitmap for paddle
-    private val bitmap: Bitmap = BitmapFactory.decodeResource(context.resources, R.drawable.paddel)
+    private val bitmap: Bitmap = BitmapFactory.decodeResource(context.resources,
+        R.drawable.paddel
+    ) // R.drawable.paddel
 
     fun draw(canvas: Canvas?) {
 
@@ -28,6 +30,7 @@ class Paddle(context: Context) {
 
         // Draw the bitmap on the canvas
         canvas?.drawBitmap(bitmap, null, paddle, paint )
+
 
     }
 

@@ -1,10 +1,13 @@
 package com.example.pong
 
+import android.app.AlertDialog
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.Rect
+import android.os.Handler
+import android.os.Looper
 import android.view.MotionEvent
 import android.view.SurfaceHolder
 import android.view.SurfaceView
@@ -18,6 +21,7 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
     private lateinit var ball: Ball
     private var limit = Rect()
     private var mHolder: SurfaceHolder? = holder
+    private var score = 0
 
     private var background1: Bitmap =
         BitmapFactory.decodeResource(context.resources, R.drawable.stars)
@@ -40,15 +44,16 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
         }
 
     }
-    // paddeln är ej låst i vertikalt läge måste lösas!
+
+    // paddeln är ej låst i vertikalt läge måste lösas! Den löses genom att unvika ändra posy i onTouchEvent
     override fun onTouchEvent(event: MotionEvent?): Boolean {
-        paddle.posY = event!!.y
-        paddle.posX = event.x
+       // paddle.posY = event!!.y
+        paddle.posX = event!!.x
 
         //Sets the position of paddle to right of screen if paddle goes "outside" screen
         if (paddle.posX + paddle.width > limit.right) {
             paddle.posX = limit.right.toFloat() - paddle.width
-            paddle.posY = limit.bottom.toFloat() - paddle.width
+            paddle.posY = limit.bottom.toFloat() - paddle.width // behövs ej när låser paddel i vertikalt läge
 
         }
 
@@ -56,11 +61,9 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
     }
 
 
-
-
     private fun setup() {
         paddle = Paddle(this.context)
-        ball = Ball(this.context, 50f, 100f, 50f, 30f, 40f)
+        ball = Ball(this.context, 50f, 100f, 50f, 30f, 10f)
         //Starting position for ball and paddle
         ball.posY = 100f
         ball.posX = 500f
@@ -91,6 +94,54 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
         }
     }
 
+
+    fun draw() {
+
+        // Lock the canvas before drawing
+
+        canvas = mHolder!!.lockCanvas()
+
+        if (canvas != null) {
+            // Draw on the canvas
+            canvas.drawBitmap(background1, matrix, null)
+            paddle.draw(canvas)
+            ball.draw(canvas)
+            mHolder!!.unlockCanvasAndPost(canvas)
+        }
+
+    }
+
+    fun update(){
+        ball.seeCage(limit)
+        ball.update()
+    }
+
+    fun youLose(){
+        val builder = AlertDialog.Builder(this.context)
+        builder.setMessage("You lose \nYour score is: $score")
+            .setTitle("Game over")
+            .setCancelable(false)
+            .setPositiveButton("ok"){dialog, _ ->
+
+                ball.speedY = 10f
+                dialog.dismiss()}
+
+        val dialog = builder.create()
+        dialog.show()
+
+    }
+    fun hasLost(){
+
+        if (ball.posY + ball.size > limit.bottom){
+
+            ball.speedY = 0f
+            ball.posY = 100f
+            youLose()
+
+        }
+    }
+
+
     override fun surfaceCreated(holder: SurfaceHolder) {
         // Perform any initialization related to the surface creation here
         start()
@@ -100,9 +151,14 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
 
         limit = Rect(0, 0, p2, p3)
 
-        paddle.posY = limit.bottom.toFloat() - 100f
-
+        paddle.posY = limit.bottom.toFloat() - paddle.width       // paddle.posY = limit.bottom.toFloat() - 100f
+        //what are line 154 and 156 for ?
         paddle.posX = limit.bottom.toFloat() - 100f
+
+
+
+
+
 
 
         // toggleGameState()
@@ -115,17 +171,18 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
 
     override fun run() {
         while (running) {
-            // Lock the canvas before drawing
-            canvas = mHolder!!.lockCanvas()
 
-            if (canvas != null) {
-                // Draw on the canvas
-                canvas.drawBitmap(background1, matrix, null)
-                paddle.draw(canvas)
-                ball.draw(canvas)
-                mHolder!!.unlockCanvasAndPost(canvas)
-                ball.seeCage(limit)
+
+
+            val handler = Handler(Looper.getMainLooper())
+            handler.post {
+                // Perform UI operations here
+                hasLost()
             }
+
+            update()
+            draw()
+
         }
     }
 }
