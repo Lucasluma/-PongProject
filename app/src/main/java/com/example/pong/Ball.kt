@@ -19,17 +19,17 @@ class Ball(context: Context, var posX: Float, var posY: Float, var size: Float, 
 
 
     // Bitmap for the ball
-    var bitmap: Bitmap = BitmapFactory.decodeResource(context.resources, R.drawable.asteroid)
+    var bitmap: Bitmap = BitmapFactory.decodeResource(context.resources, R.drawable.astroid) //R.drawable.asteroid
 
     fun update() {
         // Implement any update logic for the ball (e.g., movement)
         posY += speedY
-        posX += speedX
+        //posX += speedX
     }
 
     fun draw(canvas: Canvas?) {
         // Draw the bitmap on the canvas
-        ballAsteroid = RectF(posX - size, posY - size, posX + size , posY + size)
+        ballAsteroid = RectF(posX - size, posY - size, posX + size , posY + size) // what is this for ?
         canvas?.drawBitmap(bitmap, posX - size / 2, posY - size / 2, paint)
     }
     fun seeCage(limit: Rect){
@@ -38,6 +38,7 @@ class Ball(context: Context, var posX: Float, var posY: Float, var size: Float, 
 
         }
         if(posX + size > limit.right){
+
             speedX *= -1
 
         }
@@ -46,11 +47,15 @@ class Ball(context: Context, var posX: Float, var posY: Float, var size: Float, 
 
         }
         //MOVED THIS TO GAME VIEW TO BE ABLE TO STOP GAME LOOP
-        if (posY + size > limit.bottom){
-            //speedY *= -1
+       /* if (posY + size > limit.bottom){
+            speedY *= -1// this line was a comment
 
 
 
         }
+
+        */
     }
+
+
 }
