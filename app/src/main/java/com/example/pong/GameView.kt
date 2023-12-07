@@ -5,6 +5,8 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Paint
 import android.graphics.Rect
 import android.os.Handler
 import android.os.Looper
@@ -27,6 +29,7 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
         BitmapFactory.decodeResource(context.resources, R.drawable.stars)
 
 
+    var mutablebackground = background1.copy(Bitmap.Config.ARGB_8888, true)
     var gameActivity = context as? GameActivity
 
 
@@ -69,6 +72,9 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
         ball.posX = 500f
         paddle.posX = 500f
 
+        // arrayList<arraylist>(Abdul, 888)
+
+
     }
 
     fun start() {
@@ -103,7 +109,14 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
 
         if (canvas != null) {
             // Draw on the canvas
-            canvas.drawBitmap(background1, matrix, null)
+
+            val canvas2 = Canvas(mutablebackground)
+            val textPaint = Paint().apply {
+                textSize = 50f }
+            textPaint.color = Color.YELLOW
+            canvas2.drawText("Score: $score", 100f, 100f, textPaint)
+
+            canvas.drawBitmap(mutablebackground, matrix, null)
             paddle.draw(canvas)
             ball.draw(canvas)
             mHolder!!.unlockCanvasAndPost(canvas)
@@ -116,15 +129,30 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
         ball.update()
     }
 
+    fun saveScore(){
+
+
+
+    }
+
     fun youLose(){
         val builder = AlertDialog.Builder(this.context)
         builder.setMessage("You lose \nYour score is: $score")
             .setTitle("Game over")
             .setCancelable(false)
-            .setPositiveButton("ok"){dialog, _ ->
+            .setPositiveButton("Save Score "){dialog, _ ->
+
+                saveScore()
+                dialog.dismiss()
+
+            }
+
+            .setNegativeButton("ok"){dialog, _ ->
 
                 ball.speedY = 10f
                 dialog.dismiss()}
+
+
 
         val dialog = builder.create()
         dialog.show()
