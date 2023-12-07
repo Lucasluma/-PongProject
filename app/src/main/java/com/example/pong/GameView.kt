@@ -5,6 +5,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Canvas
+import android.graphics.Color
 import android.graphics.Rect
 import android.os.Handler
 import android.os.Looper
@@ -12,177 +13,76 @@ import android.view.MotionEvent
 import android.view.SurfaceHolder
 import android.view.SurfaceView
 
-class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback, Runnable {
-
-    private var thread: Thread? = null
-    private var running = false
-    private lateinit var canvas: Canvas
-    private lateinit var paddle: Paddle
-    private lateinit var ball: Ball
-    private var limit = Rect()
-    private var mHolder: SurfaceHolder? = holder
-    private var score = 0
-
-    private var background1: Bitmap =
-        BitmapFactory.decodeResource(context.resources, R.drawable.stars)
-
-
-    var gameActivity = context as? GameActivity
-
+class GameView(context: Context):SurfaceView(context), SurfaceHolder.Callback, Runnable{
+    var thread: Thread? = null
+    var running = false
+    lateinit var canvas: Canvas
+    var limit = Rect()
+    var objects: ArrayList<Object> = ArrayList()
+    var mHolder : SurfaceHolder? = holder
+    var objectsCreated: Int = 0
 
     init {
-        if (context is GameActivity) {
-            gameActivity = context
+        if (mHolder != null){
+            mHolder?.addCallback(this)
         }
-
-        setup()
+        objects.add(Rect(this, "Rect1", 310f, 0f, 0f, 4f,500f, 50f, Color.GREEN))
+        objects.add(Rect(this, "Rect1", 300f, 500f, 0f, 0f,50f, 300f, Color.GREEN))
     }
-
-    init {
-        if (mHolder != null) {
-            mHolder!!.addCallback(this)
-        }
-
-    }
-
-    // paddeln är ej låst i vertikalt läge måste lösas! Den löses genom att unvika ändra posy i onTouchEvent
-    override fun onTouchEvent(event: MotionEvent?): Boolean {
-       // paddle.posY = event!!.y
-        paddle.posX = event!!.x
-
-        //Sets the position of paddle to right of screen if paddle goes "outside" screen
-        if (paddle.posX + paddle.width > limit.right) {
-            paddle.posX = limit.right.toFloat() - paddle.width
-            paddle.posY = limit.bottom.toFloat() - paddle.width // behövs ej när låser paddel i vertikalt läge
-
-        }
-
-        return true
-    }
-
 
     private fun setup() {
-        paddle = Paddle(this.context)
-        ball = Ball(this.context, 50f, 100f, 50f, 30f, 10f)
-        //Starting position for ball and paddle
-        ball.posY = 100f
-        ball.posX = 500f
-        paddle.posX = 500f
 
     }
 
-    fun start() {
+    fun start(){
         running = true
         thread = Thread(this)
         thread?.start()
     }
 
-    private fun stop() {
+    fun stop(){
         running = false
-        try {
-            thread?.join()
-        } catch (e: InterruptedException) {
-            e.printStackTrace()
-        }
-    }
-
-    fun toggleGameState() {
-        if (running) {
-            stop()
-        } else {
-            start()
-        }
-    }
-
-
-    fun draw() {
-
-        // Lock the canvas before drawing
-
-        canvas = mHolder!!.lockCanvas()
-
-        if (canvas != null) {
-            // Draw on the canvas
-            canvas.drawBitmap(background1, matrix, null)
-            paddle.draw(canvas)
-            ball.draw(canvas)
-            mHolder!!.unlockCanvasAndPost(canvas)
-        }
-
+        thread?.join()
     }
 
     fun update(){
-        ball.seeCage(limit)
-        ball.update()
-    }
-
-    fun youLose(){
-        val builder = AlertDialog.Builder(this.context)
-        builder.setMessage("You lose \nYour score is: $score")
-            .setTitle("Game over")
-            .setCancelable(false)
-            .setPositiveButton("ok"){dialog, _ ->
-
-                ball.speedY = 10f
-                dialog.dismiss()}
-
-        val dialog = builder.create()
-        dialog.show()
-
-    }
-    fun hasLost(){
-
-        if (ball.posY + ball.size > limit.bottom){
-
-            ball.speedY = 0f
-            ball.posY = 100f
-            youLose()
-
+        objects.forEach{
+            it.update()
         }
     }
 
+    override fun onTouchEvent(event: MotionEvent?): Boolean {
+
+        return true
+    }
+
+
+    fun draw(){
+        canvas = holder!!.lockCanvas()
+        canvas.drawColor(Color.BLUE)
+        objects.forEach{
+            it.draw(canvas)
+        }
+        holder!!.unlockCanvasAndPost(canvas)
+    }
 
     override fun surfaceCreated(holder: SurfaceHolder) {
-        // Perform any initialization related to the surface creation here
         start()
     }
 
-    override fun surfaceChanged(p0: SurfaceHolder, p1: Int, p2: Int, p3: Int) {
-
-        limit = Rect(0, 0, p2, p3)
-
-        paddle.posY = limit.bottom.toFloat() - paddle.width       // paddle.posY = limit.bottom.toFloat() - 100f
-        //what are line 154 and 156 for ?
-        paddle.posX = limit.bottom.toFloat() - 100f
-
-
-
-
-
-
-
-        // toggleGameState()
+    override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {
+        limit = Rect(0, 0, width, height)
     }
 
     override fun surfaceDestroyed(holder: SurfaceHolder) {
-        // Perform cleanup when the surface is destroyed
         stop()
     }
 
     override fun run() {
-        while (running) {
-
-
-
-            val handler = Handler(Looper.getMainLooper())
-            handler.post {
-                // Perform UI operations here
-                hasLost()
-            }
-
+        while (running){
             update()
             draw()
-
         }
     }
+
 }
