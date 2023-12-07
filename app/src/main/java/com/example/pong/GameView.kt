@@ -8,11 +8,13 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Rect
+import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.MotionEvent
 import android.view.SurfaceHolder
 import android.view.SurfaceView
+import androidx.fragment.app.commit
 
 class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback, Runnable {
 
@@ -131,7 +133,14 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
 
     fun saveScore(){
 
+        gameActivity!!.supportFragmentManager.commit {
 
+            val saveFragment = SaveFragment()
+            var bundle = Bundle()
+            bundle.putInt("Score", score)
+            saveFragment.arguments = bundle
+            replace(R.id.frame_play, saveFragment)
+        }
 
     }
 
