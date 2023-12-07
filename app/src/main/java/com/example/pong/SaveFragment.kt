@@ -43,5 +43,11 @@ class SaveFragment: Fragment() {
 
             }
         }
+
+        binder.cancelBtn.setOnClickListener {
+            val intent = Intent(requireContext(), MainActivity::class.java)
+            startActivity(intent)
+        }
+
     }
 }
