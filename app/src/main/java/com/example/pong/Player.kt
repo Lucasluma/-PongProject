@@ -1,5 +1,5 @@
 package com.example.pong
 
-class Player(name: String, score: Int) {
+class Player(val name: String, val score: Int) {
 
 }
