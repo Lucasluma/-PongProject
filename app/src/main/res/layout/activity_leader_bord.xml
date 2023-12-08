@@ -6,4 +6,53 @@
     android:layout_height="match_parent"
     tools:context=".LeaderBordActivity">
 
+    <TextView
+        android:id="@+id/tv_leader_bord"
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:layout_marginTop="16dp"
+        android:background="@color/green"
+        android:text="Leader Bord"
+        android:textAlignment="center"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/btn_lb_m1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="92dp"
+        android:layout_marginBottom="36dp"
+        android:text="Mode1"
+        app:layout_constraintBottom_toTopOf="@+id/lb_recyclerView"
+        app:layout_constraintEnd_toStartOf="@+id/btn_lb_m2"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_leader_bord" />
+
+    <Button
+        android:id="@+id/btn_lb_m2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="48dp"
+        android:layout_marginBottom="36dp"
+        android:text="Mode2"
+        app:layout_constraintBottom_toTopOf="@+id/lb_recyclerView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_leader_bord"
+        app:layout_constraintVertical_bias="0.6" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/lb_recyclerView"
+        android:layout_width="410dp"
+        android:layout_height="509dp"
+        android:layout_marginBottom="60dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
