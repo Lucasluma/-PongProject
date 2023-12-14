@@ -10,7 +10,7 @@ import kotlin.math.abs
 import kotlin.math.pow
 import kotlin.math.sqrt
 
-class Paddle(aGameView: GameView):Object() {
+class Rect(aGameView: GameView):Object() {
     override var name: String = ""
     override val tag: String = "Rect"
     override var posX = 0f
@@ -67,15 +67,11 @@ class Paddle(aGameView: GameView):Object() {
         bitmap = aBitmap
         isBitmap = true
         gameView = aGameView
-
-
     }
     override fun update(){
         if(!stillObject) {
-            if(gameView.touchX != null)
-                posX = gameView.touchX!!
-            //Sets the position of paddle to right of screen if paddle goes "outside" screen
-
+            posY += speedY
+            posX += speedX
             detectCollision()
             detectExistCollision()
             detectBorderCollision()
@@ -90,13 +86,12 @@ class Paddle(aGameView: GameView):Object() {
 
         }
         if (posX + sizeX >= gameView.limit.right) {//Right
-            posX = gameView.limit.right - sizeX
+
         }
         if (posY <= 0) {//Top
 
         }
         if (posY + sizeY >= gameView.limit.bottom) {//Bottom
-            posX = 0f
 
         }
     }
