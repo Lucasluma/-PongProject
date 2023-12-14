@@ -118,9 +118,10 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
             textPaint.color = Color.YELLOW
             canvas2.drawText("Score: $score", 100f, 100f, textPaint)
 
-            canvas.drawBitmap(mutablebackground, matrix, null)
+
             paddle.draw(canvas)
             ball.draw(canvas)
+            canvas.drawBitmap(mutablebackground, matrix, null)
             mHolder!!.unlockCanvasAndPost(canvas)
         }
 
@@ -213,7 +214,7 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
 
             val handler = Handler(Looper.getMainLooper())
             handler.post {
-                // Perform UI operations here
+                // Perform UI operations here vvvv
                 hasLost()
             }
 
@@ -223,3 +224,6 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
         }
     }
 }
+
+
+
