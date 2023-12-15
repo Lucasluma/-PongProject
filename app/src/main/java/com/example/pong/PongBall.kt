@@ -1,17 +1,19 @@
 package com.example.pong
 
-import android.content.Context
+import android.app.AlertDialog
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.Paint
-import android.graphics.Rect
 import android.graphics.RectF
+import android.os.Looper
+import java.util.logging.Handler
 import kotlin.math.abs
+import kotlin.math.cos
 import kotlin.math.pow
+import kotlin.math.sin
 import kotlin.math.sqrt
 
-class Ball(aGameView: GameView):Object() {
+class PongBall(aGameView: GameView):Object() {
     override var name: String = ""
     override val tag: String = "Ball"
     override var posX = 0f
@@ -50,7 +52,7 @@ class Ball(aGameView: GameView):Object() {
         paint.color = color
         gameView = aGameView
     }
-    constructor(aGameView: GameView, aName: String, aPosX: Float, aPosY: Float, aSpeedX: Float, aSpeedY: Float, aSize: Float, aBitmap: Bitmap) : this(aGameView){
+    constructor(aGameView: GameView, aName: String, aPosX: Float, aPosY: Float, aSpeedX: Float, aSpeedY: Float,aSize: Float, aBitmap: Bitmap) : this(aGameView){
         name = aName
         posX = aPosX
         posY = aPosY
@@ -73,10 +75,56 @@ class Ball(aGameView: GameView):Object() {
 
     }
     private fun onCollision(collision: Object, collisionPosX: Float, collisionPosY: Float) {//när ett object kolliderar
+        if(collision.tag.contains("Ball") || collision.tag.contains("Rect")) {
+            var collisionAngle: Float = pointToDegrees(trueDistance(posX, collisionPosX), trueDistance(posY,collisionPosY))
+            var speedAngle: Float = pointToDegrees(speedX, speedY)
+            var diagonalSpeed: Float = sqrt((speedX).pow(2) + (speedY).pow(2))
+            //angleDifference =  180 - (angleDifference- 180) //angle difference when it's bigger than 180
+            var nextSpeedAngle: Float
+            val angleDifference: Float = abs(collisionAngle - speedAngle)
 
+            println("angleDif = $angleDifference  collisionAng = $collisionAngle  speedAng = $speedAngle")
+            println("collisionX = $collisionPosX  collisionY = $collisionPosY  posX = $posX  posY = $posY")
+
+            if(angleDifference >= 90 || collisionAngle == speedAngle) {
+                nextSpeedAngle = collisionAngle +180
+                if(nextSpeedAngle > 360)
+                    nextSpeedAngle -= 360
+            }
+            else if(collisionAngle - 90 <0) {
+                if(speedAngle < collisionAngle || speedAngle > 360 - (collisionAngle - 90)) {
+                    nextSpeedAngle = speedAngle - 180f *(1f- angleDifference/90f)
+                    if(nextSpeedAngle < 0)
+                        nextSpeedAngle = 360 - abs(nextSpeedAngle)
+                }
+                else {
+                    nextSpeedAngle = speedAngle + 180f *(1f- angleDifference/90f)
+                }
+            }
+            else if(collisionAngle + 90 > 360) {
+                if(speedAngle > collisionAngle || speedAngle < (collisionAngle + 90) - 360) {
+                    nextSpeedAngle = speedAngle +180f *(1f- angleDifference/90f)
+                    if(nextSpeedAngle > 360)
+                        nextSpeedAngle -= 360
+                }
+                else {
+                    nextSpeedAngle = speedAngle - 180f *(1f- angleDifference/90f)
+                }
+            }
+            else {
+                if(speedAngle > collisionAngle)
+                    nextSpeedAngle = speedAngle + 180f *(1f- angleDifference/90f)
+                else
+                    nextSpeedAngle = speedAngle - 180f *(1f- angleDifference/90f)
+            }
+            speedX = cos(nextSpeedAngle) * diagonalSpeed
+            speedY = sin(nextSpeedAngle) * diagonalSpeed
+        }
+        if(collision.tag.contains("Enemy")) {
+            gameView.objects.remove(collision)
+        }
     }
     private fun onExitCollision(collision: Object) {//när ett object som kolliderade innan går ut och slutar kollidera
-
     }
     private fun detectBorderCollision() {
         if (posX - size <= 0) {//Left
@@ -89,7 +137,32 @@ class Ball(aGameView: GameView):Object() {
 
         }
         if (posY + size > gameView.limit.bottom) {//Bottom
+            val handler = android.os.Handler(Looper.getMainLooper())
+            posY = 100f
+            handler.post {
+                val builder = AlertDialog.Builder(gameView.context)
+                builder.setMessage("You lose \nYour score is: ${gameView.score}")
+                    .setTitle("Game over")
+                    .setCancelable(false)
+                    .setPositiveButton("Save Score "){dialog, _ ->
 
+                        gameView.saveScore()
+                        dialog.dismiss()
+
+                    }
+
+                    .setNegativeButton("ok"){dialog, _ ->
+                        dialog.dismiss()
+                        gameView.stop = false
+                    }
+
+
+
+                val dialog = builder.create()
+                dialog.show()
+
+            }
+            gameView.stop = true
         }
     }
 
@@ -230,5 +303,4 @@ class Ball(aGameView: GameView):Object() {
             }
         }
     }
-
 }

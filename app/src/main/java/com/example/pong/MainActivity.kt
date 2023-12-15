@@ -24,5 +24,10 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        binder.button2.setOnClickListener {
+            val intent = Intent(this, LeaderBordActivity::class.java)
+            startActivity(intent)
+        }
+
     }
 }
