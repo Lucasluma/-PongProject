@@ -25,6 +25,7 @@ class GameView(context: Context):SurfaceView(context), SurfaceHolder.Callback, R
     var mHolder : SurfaceHolder? = holder
     var objectsCreated: Int = 0
     var score: Int = 0
+    var bestScore: Int = 0
     var gameActivity = context as? GameActivity
     var stop = false
     var touchX: Float? = null
@@ -35,14 +36,23 @@ class GameView(context: Context):SurfaceView(context), SurfaceHolder.Callback, R
 
 
     init {
+        var playerList = DataManager.playerList
+        if (!playerList.isEmpty()) {
+            for (i in 0..playerList.size - 1) {
+                if (playerList[i].score > bestScore)
+                    bestScore = playerList[i].score
+            }
+        }
+    }
+    init {
         if (context is GameActivity) {
             gameActivity = context
         }
         if (mHolder != null){
             mHolder?.addCallback(this)
         }
-        objects.add(PongBall(this, "PongBall", 300f, 0f, 0f,
-            4f,50f,BitmapFactory.decodeResource(context.resources, R.drawable.astroid)))
+        objects.add(PongBall(this, "PongBall", 300f, 200f, 0f,
+            20f,50f,BitmapFactory.decodeResource(context.resources, R.drawable.astroid)))
         objects.add(Paddle(this, "PongBall", 300f, 1700f, 0f,
             0f,BitmapFactory.decodeResource(context.resources, R.drawable.paddel)))
     }
@@ -76,7 +86,30 @@ class GameView(context: Context):SurfaceView(context), SurfaceHolder.Callback, R
     }
 
 
-    fun draw(){
+
+    fun draw() {
+        canvas = holder!!.lockCanvas()
+
+        if (canvas != null) {
+            canvas.drawBitmap(mutablebackground, matrix, null)
+            objects.forEach {
+                it.draw(canvas)
+            }
+
+
+            val textPaint = Paint().apply {
+                textSize = 50f
+                color = Color.YELLOW
+            }
+            // Draw the new score
+            canvas.drawText("Score: $score", 100f, 100f, textPaint)
+            canvas.drawText("Best Ever: $bestScore",  700f, 100f, textPaint)
+
+            holder?.unlockCanvasAndPost(canvas)
+        }
+    }
+
+    /*fun draw(){
         canvas = holder!!.lockCanvas()
 
         if(canvas != null) {
@@ -93,6 +126,8 @@ class GameView(context: Context):SurfaceView(context), SurfaceHolder.Callback, R
             holder!!.unlockCanvasAndPost(canvas)
         }
     }
+
+     */
 
     fun saveScore(){
         gameActivity!!.supportFragmentManager.commit {
