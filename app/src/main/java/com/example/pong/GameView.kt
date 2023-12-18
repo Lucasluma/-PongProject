@@ -42,7 +42,7 @@ class GameView(context: Context):SurfaceView(context), SurfaceHolder.Callback, R
             mHolder?.addCallback(this)
         }
         objects.add(PongBall(this, "PongBall", 300f, 100f, 0f,
-            8f,50f,BitmapFactory.decodeResource(context.resources, R.drawable.astroid)))
+            8f,50f,BitmapFactory.decodeResource(context.resources, R.drawable.asteroid)))
         objects.add(Paddle(this, "PongBall", 300f, 1700f, 0f,
             0f,BitmapFactory.decodeResource(context.resources, R.drawable.paddel)))
     }
@@ -76,23 +76,25 @@ class GameView(context: Context):SurfaceView(context), SurfaceHolder.Callback, R
     }
 
 
-    fun draw(){
+    fun draw() {
         canvas = holder!!.lockCanvas()
 
-        if(canvas != null) {
+        if (canvas != null) {
             canvas.drawBitmap(mutablebackground, matrix, null)
             objects.forEach {
                 it.draw(canvas)
             }
-            val canvas2 = Canvas(mutablebackground)
+
             val textPaint = Paint().apply {
-                textSize = 50f }
-            textPaint.color = Color.YELLOW
-            canvas2.drawText("Score: $score", 100f, 100f, textPaint)
+                textSize = 50f
+                color = Color.YELLOW
+            }
+            canvas.drawText("Score: $score", 100f, 100f, textPaint)
 
             holder!!.unlockCanvasAndPost(canvas)
         }
     }
+
 
     fun saveScore(){
         gameActivity!!.supportFragmentManager.commit {
