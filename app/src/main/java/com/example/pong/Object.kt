@@ -10,6 +10,7 @@ abstract class Object {
     abstract var size: Float
     abstract var sizeY: Float
     abstract var sizeX: Float
+    abstract var originalSpeedX: Float
     abstract var speedY: Float
     abstract var speedX: Float
     abstract var stillObject: Boolean

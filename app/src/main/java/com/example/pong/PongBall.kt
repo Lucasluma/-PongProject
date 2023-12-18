@@ -22,9 +22,11 @@ class PongBall(aGameView: GameView):Object() {
     var paint = Paint()
     override var size = 10f
     override var sizeX = 0f
+    override var originalSpeedX = 0f
     override var sizeY = 0f
     override var speedX = 0f
     override var speedY = 0f
+
 
     lateinit var bitmap: Bitmap
     var isBitmap: Boolean = false
@@ -57,6 +59,7 @@ class PongBall(aGameView: GameView):Object() {
         posX = aPosX
         posY = aPosY
         speedX = aSpeedX
+        originalSpeedX = aSpeedX
         size = aSize
         speedY = aSpeedY
         bitmap = aBitmap
@@ -147,6 +150,7 @@ class PongBall(aGameView: GameView):Object() {
         if (posY + size > gameView.limit.bottom) {//Bottom
             val handler = android.os.Handler(Looper.getMainLooper())
             posY = 100f
+            speedX = originalSpeedX
             handler.post {
                 val builder = AlertDialog.Builder(gameView.context)
                 builder.setMessage("You lose \nYour score is: ${gameView.score}")

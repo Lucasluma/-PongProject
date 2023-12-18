@@ -18,6 +18,7 @@ class Rect(aGameView: GameView):Object() {
     override var id: Int
     override var size = 10f
     override var sizeX = 0f
+    override var originalSpeedX = 0f
     override var sizeY = 0f
     override var speedX = 0f
     override var speedY = 0f
