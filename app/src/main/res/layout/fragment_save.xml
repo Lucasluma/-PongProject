@@ -1,31 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/save_frame"
     android:background="@color/black">
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-
-    <ImageView
-        android:id="@+id/imageView5"
-        android:layout_width="412dp"
-        android:layout_height="272dp"
-        android:layout_marginBottom="452dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@drawable/cosmos1" />
 
     <ImageView
         android:id="@+id/imageView6"
         android:layout_width="412dp"
         android:layout_height="272dp"
-        android:layout_marginBottom="204dp"
+        android:layout_marginBottom="276dp"
         android:rotationX="180"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:srcCompat="@drawable/cosmos1" />
 
@@ -33,31 +27,25 @@
         android:id="@+id/save_name"
         android:layout_width="wrap_content"
         android:layout_height="48dp"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="216dp"
         android:hint="Enter your name:"
+        android:textColor="@color/yellowgold"
         android:textColorHint="@color/yellowgold"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageView
-        android:id="@+id/imageView8"
-        android:layout_width="412dp"
-        android:layout_height="272dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@drawable/cosmos1" />
 
     <ImageButton
         android:id="@+id/cancel_btn"
         android:layout_width="116dp"
         android:layout_height="102dp"
-        android:layout_marginTop="172dp"
+        android:layout_marginTop="312dp"
         android:background="@drawable/ufo1"
         android:contextClickable="true"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.165"
+        app:layout_constraintHorizontal_bias="0.152"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -65,11 +53,11 @@
         android:id="@+id/save_btn"
         android:layout_width="130dp"
         android:layout_height="126dp"
-        android:layout_marginTop="148dp"
+        android:layout_marginTop="300dp"
         android:background="@drawable/ufohomes1"
         android:contextClickable="true"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.73"
+        app:layout_constraintHorizontal_bias="0.729"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -77,26 +65,29 @@
         android:id="@+id/cancel"
         android:layout_width="81dp"
         android:layout_height="24dp"
+        android:layout_marginBottom="84dp"
         android:text="Cancel"
         android:textColor="@color/yellowgold"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/cancel_btn"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.253"
-        app:layout_constraintStart_toStartOf="@+id/imageView5" />
+        app:layout_constraintBottom_toBottomOf="@+id/cancel_btn"
+        app:layout_constraintEnd_toEndOf="@+id/imageView6"
+        app:layout_constraintHorizontal_bias="0.211"
+        app:layout_constraintStart_toStartOf="@+id/imageView6" />
 
     <TextView
         android:id="@+id/save"
         android:layout_width="56dp"
         android:layout_height="21dp"
-        android:layout_marginTop="144dp"
+        android:layout_marginTop="8dp"
         android:text="Save"
         android:textColor="@color/yellowgold"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.685"
+        app:layout_constraintHorizontal_bias="0.676"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/imageView5" />
-
+        app:layout_constraintTop_toTopOf="@+id/save_btn" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</FrameLayout>

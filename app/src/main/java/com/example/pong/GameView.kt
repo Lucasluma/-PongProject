@@ -51,6 +51,8 @@ class GameView(context: Context):SurfaceView(context), SurfaceHolder.Callback, R
 
     }
 
+
+
     fun start(){
         running = true
         thread = Thread(this)
@@ -77,23 +79,31 @@ class GameView(context: Context):SurfaceView(context), SurfaceHolder.Callback, R
 
 
     fun draw() {
-        canvas = holder!!.lockCanvas()
+        // Check if holder is null
+        val currentHolder = holder ?: return
 
-        if (canvas != null) {
+        // Lock the canvas
+        canvas = currentHolder.lockCanvas() ?: return
+
+        try {
+            // Draw on the canvas
             canvas.drawBitmap(mutablebackground, matrix, null)
             objects.forEach {
                 it.draw(canvas)
             }
 
+            // Draw score
             val textPaint = Paint().apply {
                 textSize = 50f
                 color = Color.YELLOW
             }
             canvas.drawText("Score: $score", 100f, 100f, textPaint)
-
-            holder!!.unlockCanvasAndPost(canvas)
+        } finally {
+            // Unlock the canvas in a finally block to ensure it always happens
+            currentHolder.unlockCanvasAndPost(canvas)
         }
     }
+
 
 
     fun saveScore(){

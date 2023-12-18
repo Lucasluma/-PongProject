@@ -36,7 +36,7 @@ class RecyclerViewAdapter(val playerList: List<Player> ): RecyclerView.Adapter<R
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val currentPlayer = playerList[position]
         val playerName = currentPlayer.name
-        val PlayerPosition = position + 1
+        val PlayerPosition = position + 2
         holder.namn.text = "$PlayerPosition. $playerName"
         holder.score.text = currentPlayer.score.toString()
     }
