@@ -7,6 +7,7 @@ import android.graphics.Paint
 import android.graphics.RectF
 import android.os.Looper
 import java.util.logging.Handler
+import kotlin.math.PI
 import kotlin.math.abs
 import kotlin.math.cos
 import kotlin.math.pow
@@ -76,50 +77,9 @@ class PongBall(aGameView: GameView):Object() {
     }
     private fun onCollision(collision: Object, collisionPosX: Float, collisionPosY: Float) {//när ett object kolliderar
         if(collision.tag.contains("Ball") || collision.tag.contains("Rect")) {
-            var collisionAngle: Float = pointToDegrees(trueDistance(posX, collisionPosX), trueDistance(posY,collisionPosY))
-            var speedAngle: Float = pointToDegrees(speedX, speedY)
-            var diagonalSpeed: Float = sqrt((speedX).pow(2) + (speedY).pow(2))
-            //angleDifference =  180 - (angleDifference- 180) //angle difference when it's bigger than 180
-            var nextSpeedAngle: Float
-            val angleDifference: Float = abs(collisionAngle - speedAngle)
-
-            println("angleDif = $angleDifference  collisionAng = $collisionAngle  speedAng = $speedAngle")
-            println("collisionX = $collisionPosX  collisionY = $collisionPosY  posX = $posX  posY = $posY")
-
-            if(angleDifference >= 90 || collisionAngle == speedAngle) {
-                nextSpeedAngle = collisionAngle +180
-                if(nextSpeedAngle > 360)
-                    nextSpeedAngle -= 360
-            }
-            else if(collisionAngle - 90 <0) {
-                if(speedAngle < collisionAngle || speedAngle > 360 - (collisionAngle - 90)) {
-                    nextSpeedAngle = speedAngle - 180f *(1f- angleDifference/90f)
-                    if(nextSpeedAngle < 0)
-                        nextSpeedAngle = 360 - abs(nextSpeedAngle)
-                }
-                else {
-                    nextSpeedAngle = speedAngle + 180f *(1f- angleDifference/90f)
-                }
-            }
-            else if(collisionAngle + 90 > 360) {
-                if(speedAngle > collisionAngle || speedAngle < (collisionAngle + 90) - 360) {
-                    nextSpeedAngle = speedAngle +180f *(1f- angleDifference/90f)
-                    if(nextSpeedAngle > 360)
-                        nextSpeedAngle -= 360
-                }
-                else {
-                    nextSpeedAngle = speedAngle - 180f *(1f- angleDifference/90f)
-                }
-            }
-            else {
-                if(speedAngle > collisionAngle)
-                    nextSpeedAngle = speedAngle + 180f *(1f- angleDifference/90f)
-                else
-                    nextSpeedAngle = speedAngle - 180f *(1f- angleDifference/90f)
-            }
-            speedX = cos(nextSpeedAngle) * diagonalSpeed
-            speedY = sin(nextSpeedAngle) * diagonalSpeed
+            ballBounce(collisionPosX, collisionPosY)
         }
+
         if(collision.tag.contains("Enemy")) {
             gameView.objects.remove(collision)
         }
@@ -128,13 +88,13 @@ class PongBall(aGameView: GameView):Object() {
     }
     private fun detectBorderCollision() {
         if (posX - size <= 0) {//Left
-
+            ballBounce(0f, posY)
         }
         if (posX + size > gameView.limit.right) {//Right
-
+            ballBounce(gameView.limit.right.toFloat(), posY)
         }
         if (posY - size <= 0) {//Top
-
+            ballBounce(posX, 0f)
         }
         if (posY + size > gameView.limit.bottom) {//Bottom
             val handler = android.os.Handler(Looper.getMainLooper())
@@ -173,6 +133,63 @@ class PongBall(aGameView: GameView):Object() {
             val aRect = RectF(posX - size, posY - size, posX + size , posY + size) // what is this for ?
             canvas.drawBitmap(bitmap, null, aRect, paint)
         }
+
+    }
+
+    private fun ballBounce(collisionPosX: Float, collisionPosY: Float){
+        var collisionAngle: Float = pointToDegrees(trueDistance(posX, collisionPosX), trueDistance(posY,collisionPosY))//beroende på differenspunkten man får en vinkel
+        var speedAngle: Float = pointToDegrees(speedX, speedY)//vinkel av hastigheten beroende på en denna punkt (speedX, speedY)
+        var diagonalSpeed: Float = sqrt((speedX).pow(2) + (speedY).pow(2))//själva hastighet storheten så att säga
+
+        var nextSpeedAngle: Float //nästa vinkel för hanstigheten. så med diagnoal speed och den man kommer skapa en ny punkt av hasighet (speedX, speedY)
+        var angleDifference: Float = abs(collisionAngle - speedAngle)//skillnaden i grader mellan kollision vinkeln och hasighetsvinkeln
+        if(angleDifference > 180) {//om skillnaden är större än 180 grader så är det faktiskt en skillnad mindre än 180 grader
+            angleDifference -= 180
+            angleDifference = 180 - angleDifference
+        }
+
+        //de här bara finns för testning
+        println("angleDif = $angleDifference  collisionAng = $collisionAngle  speedAng = $speedAngle")
+        println("collisionX = $collisionPosX  collisionY = $collisionPosY  posX = $posX  posY = $posY")
+        println("trueX = ${trueDistance(posX, collisionPosX)}  trueY = ${trueDistance(posY, collisionPosY)}")
+
+        if(angleDifference >= 90 || collisionAngle == speedAngle) {//om skillnaden i grader är större än 90 så betyder det att ett object träffade bollen inte att bollen träffade den och vill man flytta iväg från den
+            nextSpeedAngle = collisionAngle +180//och på så sätt man flyttar iväg från den man väljer vinkeln på motsatt sida
+            if(nextSpeedAngle > 360)
+                nextSpeedAngle -= 360
+        }
+        else if(collisionAngle - 90 <0) {// eftersom det skulle skapa problem om detta är true händer speciella beräkningar här inne
+            if(speedAngle < collisionAngle || speedAngle > 360 + (collisionAngle - 90)) {
+                nextSpeedAngle = speedAngle - 180f *(1f- angleDifference/90f)//det är så bollar stutsar beroende på vinklar av kollisionen och hastighet
+                if(nextSpeedAngle < 0)
+                    nextSpeedAngle = 360 - abs(nextSpeedAngle)
+            }
+            else {//om speed vinkeln är större än kollision vinkeln
+                nextSpeedAngle = speedAngle + 180f *(1f- angleDifference/90f)
+            }
+        }
+        else if(collisionAngle + 90 > 360) {//skapar också lite problem
+            if(speedAngle > collisionAngle || speedAngle < (collisionAngle + 90) - 360) {
+                nextSpeedAngle = speedAngle +180f *(1f- angleDifference/90f)
+                if(nextSpeedAngle > 360)
+                    nextSpeedAngle -= 360
+            }
+            else {
+                nextSpeedAngle = speedAngle - 180f *(1f- angleDifference/90f)
+            }
+        }
+        else {
+            if(speedAngle > collisionAngle)
+                nextSpeedAngle = speedAngle + 180f *(1f- angleDifference/90f)
+            else
+                nextSpeedAngle = speedAngle - 180f *(1f- angleDifference/90f)
+        }
+        println("nextspeedangle = $nextSpeedAngle")
+        println("cos = ${cos(nextSpeedAngle)}")
+        println("sin = ${sin(nextSpeedAngle)}")
+
+        speedX = cos((nextSpeedAngle/360f)*(2f* PI.toFloat())) * diagonalSpeed//på så sätt man ändrar riktningen på hastigheten men behåller samma hastighet
+        speedY = sin((nextSpeedAngle/360)*(2* PI.toFloat())) * diagonalSpeed
 
     }
 
