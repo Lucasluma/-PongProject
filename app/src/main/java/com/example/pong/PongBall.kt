@@ -22,11 +22,9 @@ class PongBall(aGameView: GameView):Object() {
     var paint = Paint()
     override var size = 10f
     override var sizeX = 0f
-    override var originalSpeedX = 0f
     override var sizeY = 0f
     override var speedX = 0f
     override var speedY = 0f
-
 
     lateinit var bitmap: Bitmap
     var isBitmap: Boolean = false
@@ -59,7 +57,6 @@ class PongBall(aGameView: GameView):Object() {
         posX = aPosX
         posY = aPosY
         speedX = aSpeedX
-        originalSpeedX = aSpeedX
         size = aSize
         speedY = aSpeedY
         bitmap = aBitmap
@@ -74,15 +71,11 @@ class PongBall(aGameView: GameView):Object() {
             detectCollision()
             detectExistCollision()
             detectBorderCollision()
-            if (gameView.score > gameView.bestScore)
-                gameView.bestScore = gameView.score
         }
 
     }
     private fun onCollision(collision: Object, collisionPosX: Float, collisionPosY: Float) {//när ett object kolliderar
         if(collision.tag.contains("Ball") || collision.tag.contains("Rect")) {
-
-            gameView.score += 1
             var collisionAngle: Float = pointToDegrees(trueDistance(posX, collisionPosX), trueDistance(posY,collisionPosY))
             var speedAngle: Float = pointToDegrees(speedX, speedY)
             var diagonalSpeed: Float = sqrt((speedX).pow(2) + (speedY).pow(2))
@@ -136,21 +129,16 @@ class PongBall(aGameView: GameView):Object() {
     private fun detectBorderCollision() {
         if (posX - size <= 0) {//Left
 
-            speedX *= -1;
-
         }
         if (posX + size > gameView.limit.right) {//Right
 
-            speedX *= -1
         }
         if (posY - size <= 0) {//Top
 
-            speedY *= -1
         }
         if (posY + size > gameView.limit.bottom) {//Bottom
             val handler = android.os.Handler(Looper.getMainLooper())
             posY = 100f
-            speedX = originalSpeedX
             handler.post {
                 val builder = AlertDialog.Builder(gameView.context)
                 builder.setMessage("You lose \nYour score is: ${gameView.score}")
@@ -163,10 +151,9 @@ class PongBall(aGameView: GameView):Object() {
 
                     }
 
-                    .setNegativeButton("New Game"){dialog, _ ->
+                    .setNegativeButton("ok"){dialog, _ ->
                         dialog.dismiss()
                         gameView.stop = false
-                        gameView.score = 0
                     }
 
 

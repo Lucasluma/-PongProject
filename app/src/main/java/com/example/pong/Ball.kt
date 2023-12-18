@@ -161,9 +161,9 @@ class Ball(aGameView: GameView):Object() {
                     inCollisionObjects.add(it)
                     onCollision(it, it.posX + it.sizeX, it.posY)
                 }
-                else if(sqrt((posX - (it.posX + it.sizeX)).pow(2) + (posY - (it.posX + it.sizeX)).pow(2)) <= size){
+                else if(sqrt((posX - (it.posX + it.sizeX)).pow(2) + (posY - (it.posY + it.sizeY)).pow(2)) <= size){
                     inCollisionObjects.add(it)
-                    onCollision(it, it.posX + it.sizeX, it.posX + it.sizeX)
+                    onCollision(it, it.posX + it.sizeX, it.posY + it.sizeY)
                 }
 
                 else if(abs(posY-it.posY) <= size && posX > it.posX && posX <(it.posX + it.sizeX)){//träffar rektangeln uppefrån
@@ -204,7 +204,7 @@ class Ball(aGameView: GameView):Object() {
                 else if(sqrt((posX - (it.posX + it.sizeX)).pow(2) + (posY - it.posY).pow(2)) <= size){
                     continue
                 }
-                else if(sqrt((posX - (it.posX + it.sizeX)).pow(2) + (posY - (it.posX + it.sizeX)).pow(2)) <= size){
+                else if(sqrt((posX - (it.posX + it.sizeX)).pow(2) + (posY - (it.posY + it.sizeY)).pow(2)) <= size){
                     continue
                 }
 
