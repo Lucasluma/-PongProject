@@ -48,21 +48,19 @@ class Paddle(aGameView: GameView):Object() {
         paint.color = color
         gameView = aGameView
     }
-    constructor(aGameView: GameView, aName: String, aPosX: Float, aPosY: Float, aSpeedX: Float, aSpeedY: Float, aBitmap: Bitmap) : this(aGameView){
+    constructor(aGameView: GameView, aName: String, aPosX: Float, aPosY: Float, aSpeedX: Float, aSpeedY: Float,aSizeX: Float,aSizeY: Float, aBitmap: Bitmap) : this(aGameView){
         name = aName
         posX = aPosX
         posY = aPosY
         speedX = aSpeedX
-        //if(sizeX == 0f)
-        //    sizeX = aBitmap.width.toFloat()
-        //else
-        //    sizeX = aSizeX
-        //if(sizeY == 0f)
-        //    sizeY = aBitmap.height.toFloat()
-        //else
-        //    sizeY = aSizeY
-        sizeX = aBitmap.width.toFloat()
-        sizeY = aBitmap.height.toFloat()
+        if(aSizeX == 0f)
+            sizeX = aBitmap.width.toFloat()
+        else
+            sizeX = aSizeX
+        if(aSizeX == 0f)
+            sizeY = aBitmap.height.toFloat()
+        else
+            sizeY = aSizeY
         speedY = aSpeedY
         bitmap = aBitmap
         isBitmap = true
@@ -73,7 +71,7 @@ class Paddle(aGameView: GameView):Object() {
     override fun update(){
         if(!stillObject) {
             if(gameView.touchX != null)
-                posX = gameView.touchX!!
+                posX = gameView.touchX!! - sizeX/2
             //Sets the position of paddle to right of screen if paddle goes "outside" screen
 
             detectCollision()
@@ -87,7 +85,7 @@ class Paddle(aGameView: GameView):Object() {
     }
     private fun detectBorderCollision() {
         if (posX <= 0) {//Left
-
+            posX = 0f
         }
         if (posX + sizeX >= gameView.limit.right) {//Right
             posX = gameView.limit.right - sizeX
@@ -96,7 +94,6 @@ class Paddle(aGameView: GameView):Object() {
 
         }
         if (posY + sizeY >= gameView.limit.bottom) {//Bottom
-            posX = 0f
 
         }
     }
@@ -104,9 +101,8 @@ class Paddle(aGameView: GameView):Object() {
         if(!isBitmap)
             canvas?.drawRect(posX, posY, posX + sizeX, posY + sizeY, paint)
         else {
-            //val aRect = RectF(posX , posY, posX + sizeX , posY + sizeY) // what is this for ?
-            //canvas.drawBitmap(bitmap, null, aRect, paint)
-            canvas.drawBitmap(bitmap, posX, posY, paint)
+            val aRect = RectF(posX, posY, posX + sizeX , posY + sizeY)//existerar för att kunna ändra storleken på objectet med frihet genom sizeX och sizeY
+            canvas.drawBitmap(bitmap, null, aRect, paint)
         }
     }
 

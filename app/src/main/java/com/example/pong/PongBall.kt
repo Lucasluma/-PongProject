@@ -79,7 +79,8 @@ class PongBall(aGameView: GameView):Object() {
         if(collision.tag.contains("Ball") || collision.tag.contains("Rect")) {
             ballBounce(collisionPosX, collisionPosY)
         }
-
+        if(collision.name.equals("Paddle"))
+            gameView.score++
         if(collision.tag.contains("Enemy")) {
             gameView.objects.remove(collision)
         }
