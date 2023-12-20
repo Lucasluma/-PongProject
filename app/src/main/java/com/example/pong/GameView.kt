@@ -99,7 +99,7 @@ class GameView(context: Context):SurfaceView(context), SurfaceHolder.Callback, R
             }
             canvas.drawText("Score: $score", 100f, 100f, textPaint)
         } finally {
-            // Unlock the canvas in a finally block to ensure it always happens
+            // Unlock the canvas in a final block to ensure it always happens
             currentHolder.unlockCanvasAndPost(canvas)
         }
     }
