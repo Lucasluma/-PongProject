@@ -69,6 +69,10 @@ class PongBall(aGameView: GameView):Object() {
         if(!stillObject) {
             posY += speedY
             posX += speedX
+            if(gameView.score > gameView.bestScore)
+                gameView.bestScore = gameView.score
+
+
             detectCollision()
             detectExistCollision()
             detectBorderCollision()
@@ -159,6 +163,7 @@ class PongBall(aGameView: GameView):Object() {
 
                     .setNegativeButton("ok"){dialog, _ ->
                         dialog.dismiss()
+                        gameView.score = 0
                         gameView.stop = false
                     }
 
