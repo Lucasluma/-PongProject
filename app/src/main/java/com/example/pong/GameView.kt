@@ -41,8 +41,8 @@ class GameView(context: Context):SurfaceView(context), SurfaceHolder.Callback, R
         if (mHolder != null){
             mHolder?.addCallback(this)
         }
-        objects.add(PongBall(this, "PongBall", 300f, 100f, 14f,
-            10f,50f,BitmapFactory.decodeResource(context.resources, R.drawable.asteroid)))
+        objects.add(PongBall(this, "PongBall", 300f, 100f, 0f,
+            14f,50f,BitmapFactory.decodeResource(context.resources, R.drawable.asteroid)))
         objects.add(Paddle(this, "Paddle", 300f, 1800f, 0f,
             0f,300f,50f,BitmapFactory.decodeResource(context.resources, R.drawable.paddel2)))
     }
