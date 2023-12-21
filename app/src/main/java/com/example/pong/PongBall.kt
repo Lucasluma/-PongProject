@@ -69,6 +69,8 @@ class PongBall(aGameView: GameView):Object() {
         if(!stillObject) {
             posY += speedY
             posX += speedX
+            if(gameView.score > gameView.bestScore)
+                gameView.bestScore = gameView.score
             detectCollision()
             detectExistCollision()
             detectBorderCollision()
