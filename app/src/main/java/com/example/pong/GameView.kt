@@ -25,6 +25,7 @@ class GameView(context: Context):SurfaceView(context), SurfaceHolder.Callback, R
     var mHolder : SurfaceHolder? = holder
     var objectsCreated: Int = 0
     var score: Int = 0
+    var bestScore: Int = 0
     var gameActivity = context as? GameActivity
     var stop = false
     var touchX: Float? = null
@@ -32,6 +33,18 @@ class GameView(context: Context):SurfaceView(context), SurfaceHolder.Callback, R
 
     private var background1: Bitmap = BitmapFactory.decodeResource(context.resources, R.drawable.stars)
     var mutablebackground = background1.copy(Bitmap.Config.ARGB_8888, true)
+
+
+    init {
+        var playerList = DataManager.playerList
+        if (!playerList.isEmpty()) {
+            for (i in 0..playerList.size - 1) {
+                if (playerList[i].score > bestScore)
+                    bestScore = playerList[i].score
+            }
+        }
+    }
+
 
 
     init {
@@ -98,6 +111,8 @@ class GameView(context: Context):SurfaceView(context), SurfaceHolder.Callback, R
                 color = Color.YELLOW
             }
             canvas.drawText("Score: $score", 100f, 100f, textPaint)
+            canvas.drawText("Best Ever: $bestScore",  700f, 100f, textPaint)
+
         } finally {
             // Unlock the canvas in a final block to ensure it always happens
             currentHolder.unlockCanvasAndPost(canvas)
