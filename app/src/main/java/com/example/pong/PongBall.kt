@@ -67,6 +67,7 @@ class PongBall(aGameView: GameView):Object() {
         speedX = aSpeedX
         size = aSize
         speedY = aSpeedY
+        originalSpeedY = aSpeedY
         bitmap = aBitmap
         isBitmap = true
         gameView = aGameView
@@ -74,12 +75,15 @@ class PongBall(aGameView: GameView):Object() {
 
     override fun update(){
         if(!stillObject) {
-            if (speedY == 0f && speedX != 0f){
+
+           /* if (speedY == 0f && speedX != 0f){
 
                 // Den här lades till eftersom bollen fastnade många gånger längs x-axeln
 
                 speedY = 10f
             }
+
+            */
 
             increaseDifficulty()
             posY += speedY
@@ -96,9 +100,19 @@ class PongBall(aGameView: GameView):Object() {
 
     private fun increaseDifficulty(){
 
-        if(gameView.score == 3 && !firstIncrease) {
+        if(gameView.score == 10 && !firstIncrease) {
             speedY *= 1.5f
             firstIncrease = true
+
+        }
+        else if (gameView.score == 20 && !secondIncrease){
+            speedY *= 1.5f
+            secondIncrease = true
+        }
+
+        else if(gameView.score == 30 && !thirdIncrease){
+            speedY *= 1.5f
+            thirdIncrease = true
 
         }
 
@@ -145,6 +159,8 @@ class PongBall(aGameView: GameView):Object() {
                         gameView.score = 0
                         gameView.stop = false
                         firstIncrease = false
+                        secondIncrease = false
+                        thirdIncrease = false
                         speedY = originalSpeedY
                     }
 
