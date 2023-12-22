@@ -80,14 +80,7 @@ class PongBall(aGameView: GameView):Object() {
     override fun update(){
         if(!stillObject) {
 
-           /* if (speedY == 0f && speedX != 0f){
 
-                // Den här lades till eftersom bollen fastnade många gånger längs x-axeln
-
-                speedY = 10f
-            }
-
-            */
 
             increaseDifficulty()
             posY += speedY
