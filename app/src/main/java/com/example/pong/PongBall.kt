@@ -30,6 +30,7 @@ class PongBall(aGameView: GameView):Object() {
     var secondIncrease = false
     var thirdIncrease = false
     var originalSpeedY = 0f
+    var originalSpeedX = 0f
 
 
 
@@ -54,6 +55,8 @@ class PongBall(aGameView: GameView):Object() {
         posX = aPosX
         posY = aPosY
         speedX = aSpeedX
+        originalSpeedX = aSpeedX
+
         originalSpeedY = aSpeedY
         size = aSize
         speedY = aSpeedY
@@ -65,6 +68,7 @@ class PongBall(aGameView: GameView):Object() {
         posX = aPosX
         posY = aPosY
         speedX = aSpeedX
+        originalSpeedX = aSpeedX
         size = aSize
         speedY = aSpeedY
         originalSpeedY = aSpeedY
@@ -162,6 +166,7 @@ class PongBall(aGameView: GameView):Object() {
                         secondIncrease = false
                         thirdIncrease = false
                         speedY = originalSpeedY
+                        speedX = originalSpeedX
                     }
 
 
