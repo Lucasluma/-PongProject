@@ -26,6 +26,12 @@ class PongBall(aGameView: GameView):Object() {
     override var sizeY = 0f
     override var speedX = 0f
     override var speedY = 0f
+    var firstIncrease = false
+    var secondIncrease = false
+    var thirdIncrease = false
+    var originalSpeedY = 0f
+
+
 
     lateinit var bitmap: Bitmap
     var isBitmap: Boolean = false
@@ -48,6 +54,7 @@ class PongBall(aGameView: GameView):Object() {
         posX = aPosX
         posY = aPosY
         speedX = aSpeedX
+        originalSpeedY = aSpeedY
         size = aSize
         speedY = aSpeedY
         paint.color = color
@@ -67,13 +74,32 @@ class PongBall(aGameView: GameView):Object() {
 
     override fun update(){
         if(!stillObject) {
+            if (speedY == 0f && speedX != 0f){
+
+                // Den här lades till eftersom bollen fastnade många gånger längs x-axeln
+
+                speedY = 10f
+            }
+
+            increaseDifficulty()
             posY += speedY
             posX += speedX
+            println(speedY)
             if(gameView.score > gameView.bestScore)
                 gameView.bestScore = gameView.score
             detectCollision()
             detectExistCollision()
             detectBorderCollision()
+        }
+
+    }
+
+    private fun increaseDifficulty(){
+
+        if(gameView.score == 3 && !firstIncrease) {
+            speedY *= 1.5f
+            firstIncrease = true
+
         }
 
     }
@@ -116,7 +142,10 @@ class PongBall(aGameView: GameView):Object() {
 
                     .setNegativeButton("ok"){dialog, _ ->
                         dialog.dismiss()
+                        gameView.score = 0
                         gameView.stop = false
+                        firstIncrease = false
+                        speedY = originalSpeedY
                     }
 
 
