@@ -13,7 +13,7 @@ import kotlin.math.sqrt
 
 class Ball(aGameView: GameView):Object() {
     override var name: String = ""
-    override val tag: String = "Ball"
+    override var tag: String = "Ball"
     override var posX = 0f
     override var posY = 0f
     override var id: Int //varje objekt har en speciell id så att kollisions kan fungera
@@ -70,7 +70,6 @@ class Ball(aGameView: GameView):Object() {
             detectExistCollision()
             detectBorderCollision()
         }
-
     }
     private fun onCollision(collision: Object, collisionPosX: Float, collisionPosY: Float) {//när ett object kolliderar
 

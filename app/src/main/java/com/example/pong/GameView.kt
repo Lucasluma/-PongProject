@@ -25,6 +25,7 @@ class GameView(context: Context):SurfaceView(context), SurfaceHolder.Callback, R
     var mHolder : SurfaceHolder? = holder
     var objectsCreated: Int = 0
     var score: Int = 0
+    var bestScore: Int = 0
     var gameActivity = context as? GameActivity
     var stop = false
     var touchX: Float? = null
@@ -35,16 +36,28 @@ class GameView(context: Context):SurfaceView(context), SurfaceHolder.Callback, R
 
 
     init {
+        var playerList = DataManager.playerList
+        if (!playerList.isEmpty()) {
+            for (i in 0..playerList.size - 1) {
+                if (playerList[i].score > bestScore)
+                    bestScore = playerList[i].score
+            }
+        }
+    }
+
+
+
+    init {
         if (context is GameActivity) {
             gameActivity = context
         }
         if (mHolder != null){
             mHolder?.addCallback(this)
         }
-        objects.add(PongBall(this, "PongBall", 300f, 100f, 14f,
+        objects.add(PongBall(this, "PongBall", 300f, 100f, 5f,
             14f,50f,BitmapFactory.decodeResource(context.resources, R.drawable.asteroid)))
-        objects.add(Paddle(this, "PongBall", 300f, 2200f, 0f,
-            0f,BitmapFactory.decodeResource(context.resources, R.drawable.paddel)))
+        objects.add(Paddle(this, "Paddle", 300f, 1800f, 0f,
+            0f,300f,50f,BitmapFactory.decodeResource(context.resources, R.drawable.paddel2)))
     }
 
     private fun setup() {
@@ -98,6 +111,8 @@ class GameView(context: Context):SurfaceView(context), SurfaceHolder.Callback, R
                 color = Color.YELLOW
             }
             canvas.drawText("Score: $score", 100f, 100f, textPaint)
+            canvas.drawText("Best Ever: $bestScore",  700f, 100f, textPaint)
+
         } finally {
             // Unlock the canvas in a final block to ensure it always happens
             currentHolder.unlockCanvasAndPost(canvas)

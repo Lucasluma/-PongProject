@@ -26,6 +26,13 @@ class PongBall(aGameView: GameView):Object() {
     override var sizeY = 0f
     override var speedX = 0f
     override var speedY = 0f
+    var firstIncrease = false
+    var secondIncrease = false
+    var thirdIncrease = false
+    var originalSpeedY = 0f
+    var originalSpeedX = 0f
+
+
 
     lateinit var bitmap: Bitmap
     var isBitmap: Boolean = false
@@ -48,6 +55,9 @@ class PongBall(aGameView: GameView):Object() {
         posX = aPosX
         posY = aPosY
         speedX = aSpeedX
+        originalSpeedX = aSpeedX
+
+        originalSpeedY = aSpeedY
         size = aSize
         speedY = aSpeedY
         paint.color = color
@@ -58,8 +68,10 @@ class PongBall(aGameView: GameView):Object() {
         posX = aPosX
         posY = aPosY
         speedX = aSpeedX
+        originalSpeedX = aSpeedX
         size = aSize
         speedY = aSpeedY
+        originalSpeedY = aSpeedY
         bitmap = aBitmap
         isBitmap = true
         gameView = aGameView
@@ -67,11 +79,38 @@ class PongBall(aGameView: GameView):Object() {
 
     override fun update(){
         if(!stillObject) {
+
+
+
+            increaseDifficulty()
             posY += speedY
             posX += speedX
+            println(speedY)
+            if(gameView.score > gameView.bestScore)
+                gameView.bestScore = gameView.score
             detectCollision()
             detectExistCollision()
             detectBorderCollision()
+        }
+
+    }
+
+    private fun increaseDifficulty(){
+
+        if(gameView.score == 10 && !firstIncrease) {
+            speedY *= 1.5f
+            firstIncrease = true
+
+        }
+        else if (gameView.score == 20 && !secondIncrease){
+            speedY *= 1.5f
+            secondIncrease = true
+        }
+
+        else if(gameView.score == 30 && !thirdIncrease){
+            speedY *= 1.5f
+            thirdIncrease = true
+
         }
 
     }
@@ -79,7 +118,8 @@ class PongBall(aGameView: GameView):Object() {
         if(collision.tag.contains("Ball") || collision.tag.contains("Rect")) {
             ballBounce(collisionPosX, collisionPosY)
         }
-
+        if(collision.name.equals("Paddle"))
+            gameView.score++
         if(collision.tag.contains("Enemy")) {
             gameView.objects.remove(collision)
         }
@@ -113,7 +153,13 @@ class PongBall(aGameView: GameView):Object() {
 
                     .setNegativeButton("ok"){dialog, _ ->
                         dialog.dismiss()
+                        gameView.score = 0
                         gameView.stop = false
+                        firstIncrease = false
+                        secondIncrease = false
+                        thirdIncrease = false
+                        speedY = originalSpeedY
+                        speedX = originalSpeedX
                     }
 
 

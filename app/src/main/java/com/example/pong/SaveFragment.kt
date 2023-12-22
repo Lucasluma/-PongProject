@@ -37,7 +37,7 @@ class SaveFragment: Fragment() {
             }
             else {
                // println(score)
-                DataManager.createPlayer(name, score)
+                DataManager.createPlayer(name, score, requireContext())
                 val intent = Intent(requireContext(), MainActivity::class.java)
                 startActivity(intent)
 

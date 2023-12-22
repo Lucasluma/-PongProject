@@ -16,8 +16,11 @@ class LeaderBordActivity : AppCompatActivity() {
 
 
         val recyclerView = binder.lbRecyclerView
-        val adapter1 = RecyclerViewAdapter(DataManager.playerList)
         recyclerView.layoutManager = LinearLayoutManager(this)
+
+
+        var isSorted =  DataManager.sortPlayerList()
+        val adapter1 = RecyclerViewAdapter(DataManager.playerList)
         recyclerView.adapter = adapter1
 
     }
