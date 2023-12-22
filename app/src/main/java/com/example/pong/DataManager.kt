@@ -42,6 +42,20 @@ object DataManager {
         return Gson().fromJson(jsonString, Player::class.java)
     }
 
+    fun sortPlayerList(): Boolean{
+        val range = playerList.size - 2
+        for (i in 0..range) {
+            for (i in 0..range) {
+
+                if (playerList[i].score < playerList[i + 1].score) {
+                    val swapPlayer: Player = playerList[i]
+                    playerList[i] = playerList[i + 1]
+                    playerList[i + 1] = swapPlayer
+                }
+            }
+        }
+        return true
+    }
 
 
     class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
