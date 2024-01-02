@@ -48,21 +48,19 @@ class Rect(aGameView: GameView):Object() {
         paint.color = color
         gameView = aGameView
     }
-    constructor(aGameView: GameView, aName: String, aPosX: Float, aPosY: Float, aSpeedX: Float, aSpeedY: Float, aBitmap: Bitmap) : this(aGameView){
+    constructor(aGameView: GameView, aName: String, aPosX: Float, aPosY: Float, aSpeedX: Float, aSpeedY: Float,aSizeX: Float,aSizeY: Float, aBitmap: Bitmap) : this(aGameView){
         name = aName
         posX = aPosX
         posY = aPosY
         speedX = aSpeedX
-        //if(sizeX == 0f)
-        //    sizeX = aBitmap.width.toFloat()
-        //else
-        //    sizeX = aSizeX
-        //if(sizeY == 0f)
-        //    sizeY = aBitmap.height.toFloat()
-        //else
-        //    sizeY = aSizeY
-        sizeX = aBitmap.width.toFloat()
-        sizeY = aBitmap.height.toFloat()
+        if(aSizeX == 0f)
+            sizeX = aBitmap.width.toFloat()
+        else
+            sizeX = aSizeX
+        if(aSizeY == 0f)
+            sizeY = aBitmap.height.toFloat()
+        else
+            sizeY = aSizeY
         speedY = aSpeedY
         bitmap = aBitmap
         isBitmap = true
@@ -99,9 +97,8 @@ class Rect(aGameView: GameView):Object() {
         if(!isBitmap)
             canvas?.drawRect(posX, posY, posX + sizeX, posY + sizeY, paint)
         else {
-            //val aRect = RectF(posX , posY, posX + sizeX , posY + sizeY) // what is this for ?
-            //canvas.drawBitmap(bitmap, null, aRect, paint)
-            canvas.drawBitmap(bitmap, posX, posY, paint)
+            val aRect = RectF(posX, posY, posX + sizeX , posY + sizeY)//existerar för att kunna ändra storleken på objectet med frihet genom sizeX och sizeY
+            canvas.drawBitmap(bitmap, null, aRect, paint)
         }
     }
 

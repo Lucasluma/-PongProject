@@ -57,7 +57,7 @@ class Paddle(aGameView: GameView):Object() {
             sizeX = aBitmap.width.toFloat()
         else
             sizeX = aSizeX
-        if(aSizeX == 0f)
+        if(aSizeY == 0f)
             sizeY = aBitmap.height.toFloat()
         else
             sizeY = aSizeY

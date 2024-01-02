@@ -110,12 +110,12 @@ class PongBall(aGameView: GameView):Object() {
         else if(gameView.score == 30 && !thirdIncrease){
             speedY *= 1.5f
             thirdIncrease = true
-
         }
 
     }
     private fun onCollision(collision: Object, collisionPosX: Float, collisionPosY: Float) {//när ett object kolliderar
         if(collision.tag.contains("Ball") || collision.tag.contains("Rect")) {
+
             ballBounce(collisionPosX, collisionPosY)
         }
         if(collision.name.equals("Paddle"))
