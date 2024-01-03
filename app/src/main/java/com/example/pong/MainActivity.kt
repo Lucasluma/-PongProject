@@ -2,9 +2,10 @@ package com.example.pong
 
 import android.annotation.SuppressLint
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import com.example.pong.databinding.ActivityMainBinding
+// Lucas, Ali och Abdulrahman
 
 class MainActivity : AppCompatActivity() {
 
@@ -51,6 +52,12 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, LeaderBordActivity::class.java)
             startActivity(intent)
         }
+
+        binder.button3.setOnClickListener() {
+            val intent = Intent(this, Game2Activity::class.java)
+            startActivity(intent)
+        }
+
 
     }
 }

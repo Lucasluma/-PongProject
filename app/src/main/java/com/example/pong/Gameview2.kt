@@ -1,6 +1,4 @@
 package com.example.pong
-
-import android.app.AlertDialog
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -8,15 +6,11 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Rect
-import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.MotionEvent
 import android.view.SurfaceHolder
 import android.view.SurfaceView
-import androidx.fragment.app.commit
 
-class GameView(context: Context):SurfaceView(context), SurfaceHolder.Callback, Runnable{
+class GameView2(context: Context): SurfaceView(context), SurfaceHolder.Callback, Runnable{
     var thread: Thread? = null
     var running = false
     lateinit var canvas: Canvas
@@ -26,12 +20,12 @@ class GameView(context: Context):SurfaceView(context), SurfaceHolder.Callback, R
     var objectsCreated: Int = 0
     var score: Int = 0
     var bestScore: Int = 0
-    var gameActivity = context as? GameActivity
+    var game2Activity = context as Game2Activity
     var stop = false
     var touchX: Float? = null
     var touchY: Float? = null
 
-    private var background1: Bitmap = BitmapFactory.decodeResource(context.resources, R.drawable.stars)
+    private var background1: Bitmap = BitmapFactory.decodeResource(context.resources, R.drawable.planetearth)
     var mutablebackground = background1.copy(Bitmap.Config.ARGB_8888, true)
 
 
@@ -48,18 +42,18 @@ class GameView(context: Context):SurfaceView(context), SurfaceHolder.Callback, R
 
 
     init {
-
-        if (context is GameActivity) {
-            gameActivity = context
+        if (context is Game2Activity) {
+            game2Activity = context
         }
-        if (mHolder != null){
+        if (mHolder != null) {
             mHolder?.addCallback(this)
         }
-        objects.add(PongBall(this, "PongBall", 300f, 100f, 5f,
-            14f,50f,BitmapFactory.decodeResource(context.resources, R.drawable.asteroid)))
-        objects.add(Paddle(this, "Paddle", 300f, 1800f, 0f,
-            0f,300f,50f,BitmapFactory.decodeResource(context.resources, R.drawable.paddel2)))
+
+
     }
+
+
+
 
     private fun setup() {
 
@@ -122,17 +116,7 @@ class GameView(context: Context):SurfaceView(context), SurfaceHolder.Callback, R
 
 
 
-    fun saveScore(){
-        gameActivity!!.supportFragmentManager.commit {
 
-            val saveFragment = SaveFragment()
-            var bundle = Bundle()
-            bundle.putInt("Score", score)
-            saveFragment.arguments = bundle
-            replace(R.id.frame_play, saveFragment)
-        }
-
-    }
 
     override fun surfaceCreated(holder: SurfaceHolder) {
         start()

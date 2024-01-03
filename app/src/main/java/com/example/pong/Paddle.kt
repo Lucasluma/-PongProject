@@ -33,6 +33,7 @@ class Paddle(aGameView: GameView):Object() {
         id = aGameView.objectsCreated +1
         aGameView.objectsCreated++
     }
+
     constructor(aGameView: GameView, aName: String) : this(aGameView){
         name = aName
         gameView = aGameView
