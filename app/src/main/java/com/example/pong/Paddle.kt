@@ -2,9 +2,7 @@ package com.example.pong
 
 import android.graphics.Bitmap
 import android.graphics.Canvas
-import android.graphics.Color
 import android.graphics.Paint
-import android.graphics.Rect
 import android.graphics.RectF
 import kotlin.math.abs
 import kotlin.math.pow
@@ -69,6 +67,8 @@ class Paddle(aGameView: GameView):Object() {
 
 
     }
+
+
     override fun update(){
         if(!stillObject) {
             if(gameView.touchX != null)
