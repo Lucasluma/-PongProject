@@ -1,4 +1,5 @@
 package com.example.pong
+
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Paint
@@ -7,7 +8,7 @@ import kotlin.math.abs
 import kotlin.math.pow
 import kotlin.math.sqrt
 
-class Paddle(aGameView: GameView):Object() {
+class Paddle2(aGameView: GameView2):Object() {
     override var name: String = ""
     override val tag: String = "Rect"
     override var posX = 0f
@@ -22,7 +23,7 @@ class Paddle(aGameView: GameView):Object() {
     var isBitmap: Boolean = false
     override var stillObject: Boolean = false
     private var paint = Paint()
-    private var gameView: GameView
+    private var gameView: GameView2
 
 
     private var inCollisionObjects: ArrayList<Object> = ArrayList()
@@ -33,11 +34,11 @@ class Paddle(aGameView: GameView):Object() {
         aGameView.objectsCreated++
     }
 
-    constructor(aGameView: GameView, aName: String) : this(aGameView){
+    constructor(aGameView: GameView2, aName: String) : this(aGameView){
         name = aName
         gameView = aGameView
     }
-    constructor(aGameView: GameView, aName: String, aPosX: Float, aPosY: Float, aSpeedX: Float, aSpeedY: Float, aSizeX: Float, aSizeY: Float, color: Int) : this(aGameView){
+    constructor(aGameView: GameView2, aName: String, aPosX: Float, aPosY: Float, aSpeedX: Float, aSpeedY: Float, aSizeX: Float, aSizeY: Float, color: Int) : this(aGameView){
         name = aName
         posX = aPosX
         posY = aPosY
@@ -48,7 +49,7 @@ class Paddle(aGameView: GameView):Object() {
         paint.color = color
         gameView = aGameView
     }
-    constructor(aGameView: GameView, aName: String, aPosX: Float, aPosY: Float, aSpeedX: Float, aSpeedY: Float,aSizeX: Float,aSizeY: Float, aBitmap: Bitmap) : this(aGameView){
+    constructor(aGameView: GameView2, aName: String, aPosX: Float, aPosY: Float, aSpeedX: Float, aSpeedY: Float,aSizeX: Float,aSizeY: Float, aBitmap: Bitmap) : this(aGameView){
         name = aName
         posX = aPosX
         posY = aPosY

@@ -16,6 +16,6 @@ class Game2Fragment : Fragment() {
     ): View? {
         return activity?.let { GameView2(it) }
     }
-
+//2
     // Additional setup or initialization code...
 }

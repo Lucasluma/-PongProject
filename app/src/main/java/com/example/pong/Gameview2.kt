@@ -6,9 +6,11 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Rect
+import android.os.Bundle
 import android.view.MotionEvent
 import android.view.SurfaceHolder
 import android.view.SurfaceView
+import androidx.fragment.app.commit
 
 class GameView2(context: Context): SurfaceView(context), SurfaceHolder.Callback, Runnable{
     var thread: Thread? = null
@@ -48,6 +50,8 @@ class GameView2(context: Context): SurfaceView(context), SurfaceHolder.Callback,
         if (mHolder != null) {
             mHolder?.addCallback(this)
         }
+        objects.add(Paddle2(this, "Paddle", 300f, 2200f, 0f,
+            0f,300f,50f,BitmapFactory.decodeResource(context.resources, R.drawable.paddel2)))
 
 
     }
@@ -115,6 +119,17 @@ class GameView2(context: Context): SurfaceView(context), SurfaceHolder.Callback,
     }
 
 
+    fun saveScore(){
+        game2Activity!!.supportFragmentManager.commit {
+
+            val saveFragment = SaveFragment()
+            var bundle = Bundle()
+            bundle.putInt("Score", score)
+            saveFragment.arguments = bundle
+            replace(R.id.frame_play, saveFragment)
+        }
+
+    }
 
 
 
