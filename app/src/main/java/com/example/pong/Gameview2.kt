@@ -50,7 +50,7 @@ class GameView2(context: Context): SurfaceView(context), SurfaceHolder.Callback,
         if (mHolder != null) {
             mHolder?.addCallback(this)
         }
-        objects.add(Paddle(this, "Paddle", 300f, 1800f, 0f,
+        objects.add(Paddle2(this, "Paddle", 300f, 2000f, 0f,
             0f,300f,50f,BitmapFactory.decodeResource(context.resources, R.drawable.paddel2)))
 
 
