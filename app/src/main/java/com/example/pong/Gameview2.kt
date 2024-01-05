@@ -1,5 +1,6 @@
 package com.example.pong
 import android.content.Context
+import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Canvas
@@ -10,6 +11,7 @@ import android.os.Bundle
 import android.view.MotionEvent
 import android.view.SurfaceHolder
 import android.view.SurfaceView
+import androidx.core.graphics.scale
 import androidx.fragment.app.commit
 
 class GameView2(context: Context): SurfaceView(context), SurfaceHolder.Callback, Runnable{
@@ -26,9 +28,30 @@ class GameView2(context: Context): SurfaceView(context), SurfaceHolder.Callback,
     var stop = false
     var touchX: Float? = null
     var touchY: Float? = null
+    private val random = (0..3).random()
 
-    private var background1: Bitmap = BitmapFactory.decodeResource(context.resources, R.drawable.planetearth)
+
+
+
+    private val imgId = arrayOf(
+        R.drawable.planetjpg, R.drawable.cometcrash, R.drawable.planetearth, R.drawable.planet2,
+
+    )
+    private var background1: Bitmap = BitmapFactory.decodeResource(resources, imgId[random])
+
+
+
+   // private var background1: Bitmap = BitmapFactory.decodeResource(context.resources, R.drawable.planetearth)
     var mutablebackground = background1.copy(Bitmap.Config.ARGB_8888, true)
+       .scale(getScreenWidth(), getScreenHeight())
+
+    private fun getScreenWidth(): Int {
+        return Resources.getSystem().displayMetrics.widthPixels
+    }
+
+    private fun getScreenHeight(): Int {
+        return Resources.getSystem().displayMetrics.heightPixels
+    }
 
 
     init {
@@ -50,8 +73,10 @@ class GameView2(context: Context): SurfaceView(context), SurfaceHolder.Callback,
         if (mHolder != null) {
             mHolder?.addCallback(this)
         }
+        objects.add(PongBall2(this, "PongBall", 300f, 100f, 5f,
+            14f,50f,BitmapFactory.decodeResource(context.resources, R.drawable.ball3)))
         objects.add(Paddle2(this, "Paddle", 300f, 2200f, 0f,
-            0f,300f,50f,BitmapFactory.decodeResource(context.resources, R.drawable.paddel2)))
+            0f,300f,50f,BitmapFactory.decodeResource(context.resources, R.drawable.beampaddle2)))
 
 
     }
@@ -126,7 +151,7 @@ class GameView2(context: Context): SurfaceView(context), SurfaceHolder.Callback,
             var bundle = Bundle()
             bundle.putInt("Score", score)
             saveFragment.arguments = bundle
-            replace(R.id.frame_play, saveFragment)
+            replace(R.id.frame_play2, saveFragment)
         }
 
     }
