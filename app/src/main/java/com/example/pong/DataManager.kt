@@ -42,15 +42,15 @@ object DataManager {
         return Gson().fromJson(jsonString, Player::class.java)
     }
 
-    fun sortPlayerList(): Boolean{
-        val range = playerList.size - 2
+    fun sortPlayerList(playerListT: ArrayList<Player>): Boolean{
+        val range = playerListT.size - 2
         for (i in 0..range) {
             for (i in 0..range) {
 
-                if (playerList[i].score < playerList[i + 1].score) {
-                    val swapPlayer: Player = playerList[i]
-                    playerList[i] = playerList[i + 1]
-                    playerList[i + 1] = swapPlayer
+                if (playerListT[i].score < playerListT[i + 1].score) {
+                    val swapPlayer: Player = playerListT[i]
+                    playerListT[i] = playerListT[i + 1]
+                    playerListT[i + 1] = swapPlayer
                 }
             }
         }
