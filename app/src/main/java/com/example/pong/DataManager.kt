@@ -9,27 +9,49 @@ import com.google.gson.Gson
 object DataManager {
 
     var wasUploaded = false
-    var playerList = arrayListOf<Player>()
+    var playerListM1 = arrayListOf<Player>()
+    var playerListM2 = arrayListOf<Player>()
 
-    fun createPlayer(name: String, score: Int, context: Context){
+
+
+    fun createPlayer(name: String, score: Int, context: Context, mode: Int){
 
         val player: Player = Player(name, score)
-        playerList.add(player)
+        if (mode == 1) {
+            playerListM1.add(player)
 
-        val dbHelper = DatabaseHelper(context)
-        val db = dbHelper.writableDatabase
-        val values = ContentValues()
-        values.put("object_data", convertObjectToJson(player))
-        db.insert("objects", null, values)
-        db.close()
+            val dbHelper = DatabaseHelper(context)
+            val db = dbHelper.writableDatabase
+            val values = ContentValues()
+            values.put("object_data", convertObjectToJson(player))
+            db.insert("objects", null, values)
+            db.close()
+        }
+
+        else if( mode == 2){
+
+            playerListM2.add(player)
+
+            val dbHelper = DatabaseHelper(context)
+            val db = dbHelper.writableDatabase
+            val values = ContentValues()
+            values.put("object_data", convertObjectToJson(player))
+            db.insert("objects2", null, values)
+            db.close()
+        }
 
 
 
     }
 
-    fun addPlayer(player: Player){
+    fun addPlayer(player: Player, mode: Int){
 
-        playerList.add(player)
+        if(mode == 1 ){
+            playerListM1.add(player)
+        }
+        else if(mode == 2){
+            playerListM2.add(player)
+        }
 
     }
 
@@ -42,7 +64,7 @@ object DataManager {
         return Gson().fromJson(jsonString, Player::class.java)
     }
 
-    fun sortPlayerList(playerListT: ArrayList<Player>): Boolean{
+    fun sortPlayerList(playerListT: ArrayList<Player>): ArrayList<Player>{
         val range = playerListT.size - 2
         for (i in 0..range) {
             for (i in 0..range) {
@@ -54,13 +76,13 @@ object DataManager {
                 }
             }
         }
-        return true
+       return playerListT
     }
 
 
     class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
         companion object {
-            private const val DATABASE_NAME = "YourDatabaseName"
+            private const val DATABASE_NAME = "PongDataBase"
             private const val DATABASE_VERSION = 1
             const val TABLE_NAME = "objects"
             private const val TABLE_CREATE =

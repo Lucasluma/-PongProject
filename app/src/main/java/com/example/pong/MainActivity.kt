@@ -33,9 +33,25 @@ class MainActivity : AppCompatActivity() {
             while (cursor.moveToNext()) {
                 val json = cursor.getString(cursor.getColumnIndex("object_data"))
                 val player = DataManager.convertJsonToObject(json)
-                DataManager.addPlayer(player)
+                DataManager.addPlayer(player, 1)
             }
             cursor.close()
+
+
+            // begins here
+
+            db.execSQL("CREATE TABLE IF NOT EXISTS objects2 (id INTEGER PRIMARY KEY AUTOINCREMENT, object_data TEXT)")
+
+            val cursor2 = db.rawQuery("SELECT object_data FROM objects2 ORDER BY id ASC", null)
+
+            while (cursor2.moveToNext()) {
+                val json = cursor.getString(cursor.getColumnIndex("object_data"))
+                val player = DataManager.convertJsonToObject(json)
+                DataManager.addPlayer(player, 2)
+            }
+            cursor2.close()
+            // ends Here
+
             DataManager.wasUploaded = true
 
         }
