@@ -12,7 +12,7 @@ class MainActivity : AppCompatActivity() {
 
 
     private lateinit var binder: ActivityMainBinding
-    private val random = (0..1).random()
+    private val background = (0)
 
 
     @SuppressLint("Range")
@@ -80,9 +80,9 @@ class MainActivity : AppCompatActivity() {
         }
 
 
-        val imgId = arrayOf(R.drawable.stars, R.drawable.astronaut_spaceman_do_spacewalk)
+        val imgId = arrayOf(R.drawable.stars)
 
-        binder.mainBack.setBackgroundResource(imgId[random])
+        binder.mainBack.setBackgroundResource(imgId[background])
 
 
 
