@@ -25,6 +25,7 @@ class Paddle(aGameView: GameView):Object() {
     private var gameView: GameView
 
 
+
     private var inCollisionObjects: ArrayList<Object> = ArrayList()
 
     init {
@@ -349,5 +350,6 @@ class Paddle(aGameView: GameView):Object() {
             }
         }
     }
+
 
 }
