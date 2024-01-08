@@ -3,6 +3,7 @@ package com.example.pong
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
+import android.view.animation.AnimationUtils
 import androidx.appcompat.app.AppCompatActivity
 import com.example.pong.databinding.ActivityMainBinding
 // Lucas, Ali och Abdulrahman
@@ -11,6 +12,7 @@ class MainActivity : AppCompatActivity() {
 
 
     private lateinit var binder: ActivityMainBinding
+    private val random = (0..1).random()
 
 
     @SuppressLint("Range")
@@ -19,6 +21,9 @@ class MainActivity : AppCompatActivity() {
         binder = ActivityMainBinding.inflate(layoutInflater)
 
         setContentView(binder.root)
+
+        SpinStar()
+
 
         var firstRun = DataManager.wasUploaded
         if (!firstRun) {
@@ -75,5 +80,22 @@ class MainActivity : AppCompatActivity() {
         }
 
 
+        val imgId = arrayOf(R.drawable.stars, R.drawable.astronaut_spaceman_do_spacewalk)
+
+        binder.mainBack.setBackgroundResource(imgId[random])
+
+
+
+
     }
-}
+    fun SpinStar(){
+        val spin = AnimationUtils.loadAnimation(this, R.anim.rotate_animation)
+
+        val spinImg = binder.twinkel
+
+        spinImg.animation = spin
+    }
+
+
+
+    }

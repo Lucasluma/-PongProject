@@ -32,7 +32,6 @@ class GameView2(context: Context): SurfaceView(context), SurfaceHolder.Callback,
 
 
 
-
     private val imgId = arrayOf(
         R.drawable.planetjpg, R.drawable.cometcrash, R.drawable.planetearth, R.drawable.planet2,
 
@@ -53,9 +52,13 @@ class GameView2(context: Context): SurfaceView(context), SurfaceHolder.Callback,
         return Resources.getSystem().displayMetrics.heightPixels
     }
 
+    interface BitmapSwitchListener {
+        fun onBitmapSwitch()
+    }
+
 
     init {
-        var playerList = DataManager.playerList
+        var playerList = DataManager.playerListM2
         if (!playerList.isEmpty()) {
             for (i in 0..playerList.size - 1) {
                 if (playerList[i].score > bestScore)
@@ -75,8 +78,8 @@ class GameView2(context: Context): SurfaceView(context), SurfaceHolder.Callback,
         }
         objects.add(Enemy(this, "Enemy", 300f, 100f, 5f,
             14f,50f,BitmapFactory.decodeResource(context.resources, R.drawable.spacecargo)))
-        objects.add(PongBall2(this, "PongBall", 300f, 100f, 5f,
-            14f,50f,BitmapFactory.decodeResource(context.resources, R.drawable.ball3)))
+       // objects.add(PongBall2(this, "PongBall", 300f, 100f, 5f,
+         //   14f,50f,BitmapFactory.decodeResource(context.resources, R.drawable.ball3)))
         objects.add(Paddle2(this, "Paddle", 300f, 2200f, 0f,
             0f,300f,50f,BitmapFactory.decodeResource(context.resources, R.drawable.beampaddle2)))
 
