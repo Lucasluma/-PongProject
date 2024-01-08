@@ -30,13 +30,14 @@ class GameView(context: Context):SurfaceView(context), SurfaceHolder.Callback, R
     var stop = false
     var touchX: Float? = null
     var touchY: Float? = null
+    val mode = 1
 
     private var background1: Bitmap = BitmapFactory.decodeResource(context.resources, R.drawable.stars)
     var mutablebackground = background1.copy(Bitmap.Config.ARGB_8888, true)
 
 
     init {
-        var playerList = DataManager.playerList
+        var playerList = DataManager.playerListM1
         if (!playerList.isEmpty()) {
             for (i in 0..playerList.size - 1) {
                 if (playerList[i].score > bestScore)
@@ -128,6 +129,7 @@ class GameView(context: Context):SurfaceView(context), SurfaceHolder.Callback, R
             val saveFragment = SaveFragment()
             var bundle = Bundle()
             bundle.putInt("Score", score)
+            bundle.putInt("mode", mode)
             saveFragment.arguments = bundle
             replace(R.id.frame_play, saveFragment)
         }

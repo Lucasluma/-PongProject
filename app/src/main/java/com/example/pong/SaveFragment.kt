@@ -30,6 +30,7 @@ class SaveFragment: Fragment() {
 
             val name: String = binder.saveName.text.toString()
             val score: Int = requireArguments().getInt("Score")
+            val mode:  Int = requireArguments().getInt("mode")
 
             if (name.isEmpty()){
 
@@ -37,7 +38,7 @@ class SaveFragment: Fragment() {
             }
             else {
                // println(score)
-                DataManager.createPlayer(name, score, requireContext())
+                DataManager.createPlayer(name, score, requireContext(), mode)
                 val intent = Intent(requireContext(), MainActivity::class.java)
                 startActivity(intent)
 

@@ -2,6 +2,7 @@ package com.example.pong
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.ContactsContract.Data
 import android.widget.LinearLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.pong.databinding.ActivityLeaderBordBinding
@@ -19,9 +20,22 @@ class LeaderBordActivity : AppCompatActivity() {
         recyclerView.layoutManager = LinearLayoutManager(this)
 
 
-        var isSorted =  DataManager.sortPlayerList()
-        val adapter1 = RecyclerViewAdapter(DataManager.playerList)
-        recyclerView.adapter = adapter1
+       binder.btnLbM1.setOnClickListener {
 
+
+           val sortedList = DataManager.sortPlayerList(DataManager.playerListM1)
+           val adapter1 = RecyclerViewAdapter(sortedList)
+           recyclerView.adapter = adapter1
+       }
+
+
+        binder.btnLbM2.setOnClickListener {
+
+
+            val sortedList = DataManager.sortPlayerList(DataManager.playerListM2)
+            val adapter1 = RecyclerViewAdapter(sortedList)
+            recyclerView.adapter = adapter1
+
+        }
     }
 }
