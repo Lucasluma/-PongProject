@@ -1,6 +1,5 @@
 package com.example.pong
 
-import android.app.AlertDialog
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -9,8 +8,6 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Rect
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.MotionEvent
 import android.view.SurfaceHolder
 import android.view.SurfaceView
@@ -62,9 +59,7 @@ class GameView(context: Context):SurfaceView(context), SurfaceHolder.Callback, R
             0f,300f,50f,BitmapFactory.decodeResource(context.resources, R.drawable.paddel2)))
     }
 
-    private fun setup() {
 
-    }
 
 
 

@@ -25,8 +25,8 @@ class Paddle2(aGameView: GameView2):Object() {
     private var paint = Paint()
     private var gameView: GameView2
 
-
     private var inCollisionObjects: ArrayList<Object> = ArrayList()
+
 
     init {
         gameView = aGameView

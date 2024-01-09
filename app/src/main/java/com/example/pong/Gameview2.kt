@@ -52,9 +52,7 @@ class GameView2(context: Context): SurfaceView(context), SurfaceHolder.Callback,
         return Resources.getSystem().displayMetrics.heightPixels
     }
 
-    interface BitmapSwitchListener {
-        fun onBitmapSwitch()
-    }
+
 
 
     init {
