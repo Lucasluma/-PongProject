@@ -51,7 +51,7 @@ class MainActivity : AppCompatActivity() {
             val cursor2 = db.rawQuery("SELECT object_data FROM objects2 ORDER BY id ASC", null)
 
             while (cursor2.moveToNext()) {
-                val json = cursor.getString(cursor.getColumnIndex("object_data"))
+                val json = cursor2.getString(cursor2.getColumnIndex("object_data"))
                 val player = DataManager.convertJsonToObject(json)
                 DataManager.addPlayer(player, 2)
             }
