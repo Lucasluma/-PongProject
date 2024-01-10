@@ -150,7 +150,7 @@ class PongBall2(aGameView: GameView2):Object() {
 
                     }
 
-                    .setNegativeButton("ok"){dialog, _ ->
+                    .setNegativeButton("Replay"){dialog, _ ->
                         dialog.dismiss()
                         gameView.score = 0
                         gameView.stop = false

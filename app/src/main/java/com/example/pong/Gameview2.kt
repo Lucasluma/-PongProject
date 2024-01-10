@@ -28,12 +28,13 @@ class GameView2(context: Context): SurfaceView(context), SurfaceHolder.Callback,
     var stop = false
     var touchX: Float? = null
     var touchY: Float? = null
-    private val random = (0..3).random()
+    private val random = (0..4).random()
 
 
 
     private val imgId = arrayOf(
         R.drawable.planetjpg, R.drawable.cometcrash, R.drawable.planetearth, R.drawable.planet2,
+        R.drawable.astronaut_spaceman_do_spacewalk
 
     )
     private var background1: Bitmap = BitmapFactory.decodeResource(resources, imgId[random])
@@ -52,9 +53,7 @@ class GameView2(context: Context): SurfaceView(context), SurfaceHolder.Callback,
         return Resources.getSystem().displayMetrics.heightPixels
     }
 
-    interface BitmapSwitchListener {
-        fun onBitmapSwitch()
-    }
+
 
 
     init {
