@@ -156,7 +156,6 @@ class GameView2(context: Context): SurfaceView(context), SurfaceHolder.Callback,
     }
 
 
-
     override fun surfaceCreated(holder: SurfaceHolder) {
         start()
     }
