@@ -76,11 +76,11 @@ class GameView2(context: Context): SurfaceView(context), SurfaceHolder.Callback,
             mHolder?.addCallback(this)
         }
         objects.add(Enemy(this, "Enemy", 300f, 100f, 5f,
-            14f,50f,BitmapFactory.decodeResource(context.resources, R.drawable.spacecargo)))
-       // objects.add(PongBall2(this, "PongBall", 300f, 100f, 5f,
-         //   14f,50f,BitmapFactory.decodeResource(context.resources, R.drawable.ball3)))
+            14f,100f,BitmapFactory.decodeResource(context.resources, R.drawable.spacecargo)))
+        objects.add(PongBall2(this, "PongBall", 300f, 100f, 5f,
+            14f,25f,BitmapFactory.decodeResource(context.resources, R.drawable.ball3)))
         objects.add(Paddle2(this, "Paddle", 300f, 2200f, 0f,
-            0f,300f,50f,BitmapFactory.decodeResource(context.resources, R.drawable.beampaddle2)))
+            0f,300f,100f,BitmapFactory.decodeResource(context.resources, R.drawable.beampaddle2)))
 
 
     }
@@ -108,6 +108,7 @@ class GameView2(context: Context): SurfaceView(context), SurfaceHolder.Callback,
     override fun onTouchEvent(event: MotionEvent?): Boolean {
         touchX = event?.x
         touchY = event?.y
+
 
         return true
     }
@@ -175,5 +176,7 @@ class GameView2(context: Context): SurfaceView(context), SurfaceHolder.Callback,
             draw()
         }
     }
+
+
 
 }
