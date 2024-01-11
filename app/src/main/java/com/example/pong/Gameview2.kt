@@ -75,7 +75,7 @@ class GameView2(context: Context): SurfaceView(context), SurfaceHolder.Callback,
         if (mHolder != null) {
             mHolder?.addCallback(this)
         }
-        objects.add(Enemy(this, "Enemy", 300f, 100f, 5f,
+        objects.add(Enemy(this, "Enemy", 400f, 100f, 5f,
             14f,100f,BitmapFactory.decodeResource(context.resources, R.drawable.spacecargo)))
         objects.add(PongBall2(this, "PongBall", 300f, 100f, 5f,
             14f,25f,BitmapFactory.decodeResource(context.resources, R.drawable.ball3)))
