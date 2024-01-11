@@ -25,12 +25,11 @@ class MainActivity : AppCompatActivity() {
         SpinStar()
 
 
-
         var firstRun = DataManager.wasUploaded
         if (!firstRun) {
             val context = applicationContext
 
-            val dbHelper = DataManager.DatabaseHelper(context)
+            val dbHelper =DataManager.DatabaseHelper(context)
             val db = dbHelper.readableDatabase
 
             db.execSQL("CREATE TABLE IF NOT EXISTS objects (id INTEGER PRIMARY KEY AUTOINCREMENT, object_data TEXT)")
@@ -81,12 +80,16 @@ class MainActivity : AppCompatActivity() {
         }
 
 
+        val imgId = arrayOf(R.drawable.stars)
+
+        binder.mainBack.setBackgroundResource(imgId[background])
+
+
+
+
+
 
     }
-
-
-
-
     fun SpinStar(){
         val spin = AnimationUtils.loadAnimation(this, R.anim.rotate_animation)
 
@@ -96,7 +99,9 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-}
 
+
+
+}
 
 
