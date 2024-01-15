@@ -13,7 +13,6 @@ import android.view.SurfaceHolder
 import android.view.SurfaceView
 import androidx.core.graphics.scale
 import androidx.fragment.app.commit
-import kotlin.random.Random
 
 class GameView2(context: Context): SurfaceView(context), SurfaceHolder.Callback, Runnable{
     var thread: Thread? = null
@@ -31,7 +30,7 @@ class GameView2(context: Context): SurfaceView(context), SurfaceHolder.Callback,
     var touchY: Float? = null
     private val random = (0..4).random()
 
-
+//yes
     var idsToRemove: ArrayList<Int> = ArrayList()
     var objectsToAdd: ArrayList<Object> = ArrayList()
 
