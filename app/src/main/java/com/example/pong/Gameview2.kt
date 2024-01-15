@@ -29,6 +29,16 @@ class GameView2(context: Context): SurfaceView(context), SurfaceHolder.Callback,
     var stop = false
     var touchX: Float? = null
     var touchY: Float? = null
+    val mode = 2
+    val enemyDrawables = arrayOf(R.drawable.spacecargo1_1, R.drawable.spacecargo1_2,
+                                  R.drawable.spacemine1_1,R.drawable.spacenuke1_1)
+    val pongBallDrawables = arrayOf(R.drawable.ball3, R.drawable.ball3_1,R.drawable.bomb1)
+    val paddleDrawables = arrayOf(R.drawable.beampaddle2, R.drawable.beampaddle2_1,R.drawable.saber1_2)
+
+    // Random index for each type
+    val randomEnemy = (0 until enemyDrawables.size).random()
+    val randomPongBall = (0 until pongBallDrawables.size).random()
+    val randomPaddle = (0 until paddleDrawables.size).random()
     private val random = (0..4).random()
 
 
@@ -78,6 +88,7 @@ class GameView2(context: Context): SurfaceView(context), SurfaceHolder.Callback,
         if (mHolder != null) {
             mHolder?.addCallback(this)
         }
+ EnemyGenerating
         //objects.add(Enemy(this, "Enemy", 300f, 100f, 5f,
         //    14f,50f,BitmapFactory.decodeResource(context.resources, R.drawable.spacecargo)))
         objects.add(PongBall2(this, "PongBall", 300f, 100f, 5f,
@@ -85,6 +96,26 @@ class GameView2(context: Context): SurfaceView(context), SurfaceHolder.Callback,
         objects.add(Paddle2(this, "Paddle", 300f, 1400f, 0f,
             0f,300f,50f,BitmapFactory.decodeResource(context.resources, R.drawable.beampaddle2)))
         objects.add(EnemyGenerator(this, 1000f, 4f, 200f, 500f, 200f))
+
+        objects.add(
+            Enemy(
+                this, "Enemy", 400f, 100f, 5f,
+                14f, 50f, BitmapFactory.decodeResource(context.resources, enemyDrawables[randomEnemy])
+            )
+        )
+        objects.add(
+            PongBall2(
+                this, "PongBall", 300f, 100f, 5f,
+                14f, 50f, BitmapFactory.decodeResource(context.resources, pongBallDrawables[randomPongBall])
+            )
+        )
+        objects.add(
+            Paddle2(
+                this, "Paddle", 300f, 2200f, 0f,
+                0f, 400f, 75f, BitmapFactory.decodeResource(context.resources, paddleDrawables[randomPaddle])
+            )
+        )
+
 
 
     }
@@ -117,6 +148,7 @@ class GameView2(context: Context): SurfaceView(context), SurfaceHolder.Callback,
     override fun onTouchEvent(event: MotionEvent?): Boolean {
         touchX = event?.x
         touchY = event?.y
+
 
         return true
     }
@@ -157,12 +189,12 @@ class GameView2(context: Context): SurfaceView(context), SurfaceHolder.Callback,
             val saveFragment = SaveFragment()
             var bundle = Bundle()
             bundle.putInt("Score", score)
+            bundle.putInt("mode", mode)
             saveFragment.arguments = bundle
             replace(R.id.frame_play2, saveFragment)
         }
 
     }
-
 
 
     override fun surfaceCreated(holder: SurfaceHolder) {
@@ -182,6 +214,7 @@ class GameView2(context: Context): SurfaceView(context), SurfaceHolder.Callback,
             if(!stop)
                 update()
             draw()
+ EnemyGenerating
             for(i in idsToRemove) {//eftersom det ställde till mycket problem med att remova objects blir det en safe metod här för att remova
                 var posToRemove: Int = -1//börjar vid -1 eftersom första borde vara 0 och posToRemove++ händer varje gång
                 var okToRemove: Boolean = false
@@ -206,7 +239,11 @@ class GameView2(context: Context): SurfaceView(context), SurfaceHolder.Callback,
                     objectsToAdd = ArrayList()
                 }
             }
+
+
         }
     }
+
+
 
 }

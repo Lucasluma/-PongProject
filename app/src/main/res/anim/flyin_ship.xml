@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<set xmlns:android="http://schemas.android.com/apk/res/android"
+
+        android:fillAfter="true">
+
+        <!-- Translate the ship from the left side to the right side -->
+        <translate
+            android:fromXDelta="-100%p"
+            android:toXDelta="100%p"
+            android:duration="6000"
+            android:repeatCount = "infinite"
+            />
+
+</set>
+

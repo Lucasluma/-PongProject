@@ -44,6 +44,7 @@ class Enemy(aGameView: GameView2):Object() {
         name = aName
         gameView = aGameView
     }
+
     constructor(aGameView: GameView2, aName: String, aPosX: Float, aPosY: Float, aSpeedX: Float, aSpeedY: Float, aSize: Float, color: Int) : this(aGameView){
         name = aName
         posX = aPosX

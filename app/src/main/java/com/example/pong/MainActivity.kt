@@ -87,6 +87,8 @@ class MainActivity : AppCompatActivity() {
 
 
 
+
+
     }
     fun SpinStar(){
         val spin = AnimationUtils.loadAnimation(this, R.anim.rotate_animation)
@@ -98,4 +100,8 @@ class MainActivity : AppCompatActivity() {
 
 
 
-    }
+
+
+}
+
+
