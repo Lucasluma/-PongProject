@@ -15,7 +15,7 @@ import kotlin.math.sqrt
 
 class PongBall2(aGameView: GameView2):Object() {
     override var name: String = ""
-    override val tag: String = "Ball"
+    override var tag: String = "Ball"
     override var posX = 0f
     override var posY = 0f
     override var id: Int //varje objekt har en speciell id så att kollisions kan fungera
@@ -25,18 +25,12 @@ class PongBall2(aGameView: GameView2):Object() {
     override var sizeY = 0f
     override var speedX = 0f
     override var speedY = 0f
-    var firstIncrease = false
-    var secondIncrease = false
-    var thirdIncrease = false
-    var originalSpeedY = 0f
-    var originalSpeedX = 0f
-
 
 
     lateinit var bitmap: Bitmap
     var isBitmap: Boolean = false
     override var stillObject: Boolean = false
-
+    var difficultyIncreaseThreshold: Int = 10
     var gameView: GameView2
     var inCollisionObjects: ArrayList<Object> = ArrayList()
 
@@ -54,9 +48,6 @@ class PongBall2(aGameView: GameView2):Object() {
         posX = aPosX
         posY = aPosY
         speedX = aSpeedX
-        originalSpeedX = aSpeedX
-
-        originalSpeedY = aSpeedY
         size = aSize
         speedY = aSpeedY
         paint.color = color
@@ -67,10 +58,8 @@ class PongBall2(aGameView: GameView2):Object() {
         posX = aPosX
         posY = aPosY
         speedX = aSpeedX
-        originalSpeedX = aSpeedX
         size = aSize
         speedY = aSpeedY
-        originalSpeedY = aSpeedY
         bitmap = aBitmap
         isBitmap = true
         gameView = aGameView
@@ -78,13 +67,9 @@ class PongBall2(aGameView: GameView2):Object() {
 
     override fun update(){
         if(!stillObject) {
-
-
-
             increaseDifficulty()
             posY += speedY
             posX += speedX
-            println(speedY)
             if(gameView.score > gameView.bestScore)
                 gameView.bestScore = gameView.score
             detectCollision()
@@ -96,31 +81,32 @@ class PongBall2(aGameView: GameView2):Object() {
 
     private fun increaseDifficulty(){
 
-        if(gameView.score == 10 && !firstIncrease) {
+        if((gameView.score - 10) >= difficultyIncreaseThreshold) {
             speedY *= 1.5f
-            firstIncrease = true
-
-        }
-        else if (gameView.score == 20 && !secondIncrease){
-            speedY *= 1.5f
-            secondIncrease = true
-        }
-
-        else if(gameView.score == 30 && !thirdIncrease){
-            speedY *= 1.5f
-            thirdIncrease = true
-
+            speedX *= 1.5f
+            difficultyIncreaseThreshold += 10
         }
 
     }
     private fun onCollision(collision: Object, collisionPosX: Float, collisionPosY: Float) {//när ett object kolliderar
         if(collision.tag.contains("Ball") || collision.tag.contains("Rect")) {
-            ballBounce(collisionPosX, collisionPosY)
+            if(!collision.name.equals("Paddle"))
+                ballBounce(collisionPosX, collisionPosY)
         }
-        if(collision.name.equals("Paddle"))
-            gameView.score++
+        if(collision.name.equals("Paddle")) {
+            val temp: Float = abs(collision.posX - collisionPosX)/collision.sizeX//om den är 1 så är collisionen lägst till höger, om 0 är det längst till vänster
+            val nextSpeedAngle: Float = 200f + temp*140f
+            val diagonalSpeed: Float = sqrt((speedX).pow(2) + (speedY).pow(2))//själva hastighet storheten så att säga
+            speedX = cos((nextSpeedAngle/360f)*(2f* PI.toFloat())) * diagonalSpeed//på så sätt man ändrar riktningen på hastigheten men behåller samma hastighet
+            speedY = sin((nextSpeedAngle/360)*(2* PI.toFloat())) * diagonalSpeed
+        }
         if(collision.tag.contains("Enemy")) {
-            gameView.objects.remove(collision)
+            gameView.score++
+            println("yo?: ${collision.name}")
+            inCollisionObjects.remove(collision)
+            collision.tag = "remove"//på så sätt försvinner den på ett säkert sätt medans den removas på ett säkert sätt från listan
+            gameView.idsToRemove.add(collision.id)//så att den removas senare
+            println( gameView.objects.count())
         }
     }
     private fun onExitCollision(collision: Object) {//när ett object som kolliderade innan går ut och slutar kollidera
@@ -137,7 +123,6 @@ class PongBall2(aGameView: GameView2):Object() {
         }
         if (posY + size > gameView.limit.bottom) {//Bottom
             val handler = android.os.Handler(Looper.getMainLooper())
-            posY = 100f
             handler.post {
                 val builder = AlertDialog.Builder(gameView.context)
                 builder.setMessage("You lose \nYour score is: ${gameView.score}")
@@ -154,11 +139,7 @@ class PongBall2(aGameView: GameView2):Object() {
                         dialog.dismiss()
                         gameView.score = 0
                         gameView.stop = false
-                        firstIncrease = false
-                        secondIncrease = false
-                        thirdIncrease = false
-                        speedY = originalSpeedY
-                        speedX = originalSpeedX
+                        resetGame()
                     }
 
 
@@ -175,7 +156,7 @@ class PongBall2(aGameView: GameView2):Object() {
         if(!isBitmap)
             canvas?.drawCircle(posX,posY, size, paint)
         else {
-            val aRect = RectF(posX - size, posY - size, posX + size , posY + size) // what is this for ?
+            val aRect = RectF(posX - size, posY - size, posX + size , posY + size)//to draw the bitmap in a circle way
             canvas.drawBitmap(bitmap, null, aRect, paint)
         }
 
@@ -194,9 +175,9 @@ class PongBall2(aGameView: GameView2):Object() {
         }
 
         //de här bara finns för testning
-        println("angleDif = $angleDifference  collisionAng = $collisionAngle  speedAng = $speedAngle")
-        println("collisionX = $collisionPosX  collisionY = $collisionPosY  posX = $posX  posY = $posY")
-        println("trueX = ${trueDistance(posX, collisionPosX)}  trueY = ${trueDistance(posY, collisionPosY)}")
+        //println("angleDif = $angleDifference  collisionAng = $collisionAngle  speedAng = $speedAngle")
+        //println("collisionX = $collisionPosX  collisionY = $collisionPosY  posX = $posX  posY = $posY")
+        //println("trueX = ${trueDistance(posX, collisionPosX)}  trueY = ${trueDistance(posY, collisionPosY)}")
 
         if(angleDifference >= 90 || collisionAngle == speedAngle) {//om skillnaden i grader är större än 90 så betyder det att ett object träffade bollen inte att bollen träffade den och vill man flytta iväg från den
             nextSpeedAngle = collisionAngle +180//och på så sätt man flyttar iväg från den man väljer vinkeln på motsatt sida
@@ -229,15 +210,29 @@ class PongBall2(aGameView: GameView2):Object() {
             else
                 nextSpeedAngle = speedAngle - 180f *(1f- angleDifference/90f)
         }
-        println("nextspeedangle = $nextSpeedAngle")
-        println("cos = ${cos(nextSpeedAngle)}")
-        println("sin = ${sin(nextSpeedAngle)}")
+        //println("nextspeedangle = $nextSpeedAngle")
+        //println("cos = ${cos(nextSpeedAngle)}")
+        //println("sin = ${sin(nextSpeedAngle)}")
 
         speedX = cos((nextSpeedAngle/360f)*(2f* PI.toFloat())) * diagonalSpeed//på så sätt man ändrar riktningen på hastigheten men behåller samma hastighet
         speedY = sin((nextSpeedAngle/360)*(2* PI.toFloat())) * diagonalSpeed
 
     }
+     private fun resetGame(){
+        gameView.objects.forEach{
+            if(it.tag.contains("Enemy")){
+                gameView.idsToRemove.add(it.id)
+                it.tag = "remove"
+            }
+        }
+        while(difficultyIncreaseThreshold -10 != 0) {
+            speedX /= 1.5f
+            speedY /= 1.5f
+            difficultyIncreaseThreshold -= 10
+        }
+        posY = 100f
 
+    }
     private fun detectCollision(){
         for (it in gameView.objects){
             var skip: Boolean = false
@@ -360,8 +355,6 @@ class PongBall2(aGameView: GameView2):Object() {
                     inCollisionObjects.remove(it)
                     onExitCollision(it)
                 }
-
-
             }
         }
     }

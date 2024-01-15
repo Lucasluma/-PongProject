@@ -16,7 +16,7 @@ import kotlin.math.sqrt
 
 class PongBall(aGameView: GameView):Object() {
     override var name: String = ""
-    override val tag: String = "Ball"
+    override var tag: String = "Ball"
     override var posX = 0f
     override var posY = 0f
     override var id: Int //varje objekt har en speciell id så att kollisions kan fungera
@@ -56,7 +56,6 @@ class PongBall(aGameView: GameView):Object() {
         posY = aPosY
         speedX = aSpeedX
         originalSpeedX = aSpeedX
-
         originalSpeedY = aSpeedY
         size = aSize
         speedY = aSpeedY
@@ -195,9 +194,9 @@ class PongBall(aGameView: GameView):Object() {
         }
 
         //de här bara finns för testning
-        println("angleDif = $angleDifference  collisionAng = $collisionAngle  speedAng = $speedAngle")
-        println("collisionX = $collisionPosX  collisionY = $collisionPosY  posX = $posX  posY = $posY")
-        println("trueX = ${trueDistance(posX, collisionPosX)}  trueY = ${trueDistance(posY, collisionPosY)}")
+        //println("angleDif = $angleDifference  collisionAng = $collisionAngle  speedAng = $speedAngle")
+        //println("collisionX = $collisionPosX  collisionY = $collisionPosY  posX = $posX  posY = $posY")
+        //println("trueX = ${trueDistance(posX, collisionPosX)}  trueY = ${trueDistance(posY, collisionPosY)}")
 
         if(angleDifference >= 90 || collisionAngle == speedAngle) {//om skillnaden i grader är större än 90 så betyder det att ett object träffade bollen inte att bollen träffade den och vill man flytta iväg från den
             nextSpeedAngle = collisionAngle +180//och på så sätt man flyttar iväg från den man väljer vinkeln på motsatt sida
@@ -230,9 +229,9 @@ class PongBall(aGameView: GameView):Object() {
             else
                 nextSpeedAngle = speedAngle - 180f *(1f- angleDifference/90f)
         }
-        println("nextspeedangle = $nextSpeedAngle")
-        println("cos = ${cos(nextSpeedAngle)}")
-        println("sin = ${sin(nextSpeedAngle)}")
+        //println("nextspeedangle = $nextSpeedAngle")
+        //println("cos = ${cos(nextSpeedAngle)}")
+        //println("sin = ${sin(nextSpeedAngle)}")
 
         speedX = cos((nextSpeedAngle/360f)*(2f* PI.toFloat())) * diagonalSpeed//på så sätt man ändrar riktningen på hastigheten men behåller samma hastighet
         speedY = sin((nextSpeedAngle/360)*(2* PI.toFloat())) * diagonalSpeed

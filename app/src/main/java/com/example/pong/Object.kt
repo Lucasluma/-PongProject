@@ -3,7 +3,7 @@ package com.example.pong
 import android.graphics.Canvas
 
 abstract class Object {
-    abstract val tag:String
+    abstract var tag:String
     abstract var name:String
     abstract var posX: Float
     abstract var posY: Float

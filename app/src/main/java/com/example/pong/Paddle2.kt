@@ -10,7 +10,7 @@ import kotlin.math.sqrt
 
 class Paddle2(aGameView: GameView2):Object() {
     override var name: String = ""
-    override val tag: String = "Rect"
+    override var tag: String = "Rect"
     override var posX = 0f
     override var posY = 0f
     override var id: Int
@@ -58,7 +58,7 @@ class Paddle2(aGameView: GameView2):Object() {
             sizeX = aBitmap.width.toFloat()
         else
             sizeX = aSizeX
-        if(aSizeX == 0f)
+        if(aSizeY == 0f)
             sizeY = aBitmap.height.toFloat()
         else
             sizeY = aSizeY
@@ -266,7 +266,10 @@ class Paddle2(aGameView: GameView2):Object() {
     }
     fun detectExistCollision(){
         for(it in inCollisionObjects) {
-            if (it.tag.contains("Rect")) {
+            if(gameView.idsToRemove.contains(it.id)){
+                inCollisionObjects.remove(it)
+            }
+            else if (it.tag.contains("Rect")) {
                 if(it.posX >= posX && it.posX <=(posX + sizeX) && it.posY >= posY && it.posY <=(posY + sizeY)) {
                     continue
                 }

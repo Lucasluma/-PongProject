@@ -1,15 +1,19 @@
 package com.example.pong
+
+
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.graphics.Color
 import android.graphics.Paint
+import android.graphics.Rect
 import android.graphics.RectF
 import kotlin.math.abs
 import kotlin.math.pow
 import kotlin.math.sqrt
 
-class Paddle(aGameView: GameView):Object() {
+class EnemyRect(aGameView: GameView2):Object() {
     override var name: String = ""
-    override var tag: String = "Rect"
+    override var tag: String = "RectEnemy"
     override var posX = 0f
     override var posY = 0f
     override var id: Int
@@ -22,23 +26,20 @@ class Paddle(aGameView: GameView):Object() {
     var isBitmap: Boolean = false
     override var stillObject: Boolean = false
     private var paint = Paint()
-    private var gameView: GameView
-
-
-
+    private var gameView: GameView2
     private var inCollisionObjects: ArrayList<Object> = ArrayList()
+    private var difficultyIncreaseThreshold: Int = 10//används för att increasa difficulty på rätt sätt
 
     init {
         gameView = aGameView
         id = aGameView.objectsCreated +1
         aGameView.objectsCreated++
     }
-
-    constructor(aGameView: GameView, aName: String) : this(aGameView){
+    constructor(aGameView: GameView2, aName: String) : this(aGameView){
         name = aName
         gameView = aGameView
     }
-    constructor(aGameView: GameView, aName: String, aPosX: Float, aPosY: Float, aSpeedX: Float, aSpeedY: Float, aSizeX: Float, aSizeY: Float, color: Int) : this(aGameView){
+    constructor(aGameView: GameView2, aName: String, aPosX: Float, aPosY: Float, aSpeedX: Float, aSpeedY: Float, aSizeX: Float, aSizeY: Float, color: Int) : this(aGameView){
         name = aName
         posX = aPosX
         posY = aPosY
@@ -49,7 +50,7 @@ class Paddle(aGameView: GameView):Object() {
         paint.color = color
         gameView = aGameView
     }
-    constructor(aGameView: GameView, aName: String, aPosX: Float, aPosY: Float, aSpeedX: Float, aSpeedY: Float,aSizeX: Float,aSizeY: Float, aBitmap: Bitmap) : this(aGameView){
+    constructor(aGameView: GameView2, aName: String, aPosX: Float, aPosY: Float, aSpeedX: Float, aSpeedY: Float,aSizeX: Float,aSizeY: Float, aBitmap: Bitmap) : this(aGameView){
         name = aName
         posX = aPosX
         posY = aPosY
@@ -69,19 +70,11 @@ class Paddle(aGameView: GameView):Object() {
 
 
     }
-
-
-
-
-
     override fun update(){
-        if(!stillObject) {
-            if(gameView.touchX != null)
-                posX = gameView.touchX!! - sizeX/2
-            //Sets the position of paddle to right of screen if paddle goes "outside" screen
-
-            detectCollision()
-            detectExistCollision()
+        if(!stillObject && !tag.equals("remove")) {
+            increaseDifficulty()
+            posY += speedY
+            posX += speedX
             detectBorderCollision()
         }
     }
@@ -91,26 +84,43 @@ class Paddle(aGameView: GameView):Object() {
     }
     private fun detectBorderCollision() {
         if (posX <= 0) {//Left
-            posX = 0f
+
         }
         if (posX + sizeX >= gameView.limit.right) {//Right
-            posX = gameView.limit.right - sizeX
+
         }
         if (posY <= 0) {//Top
 
         }
         if (posY + sizeY >= gameView.limit.bottom) {//Bottom
-
+            if(posY > gameView.limit.bottom){
+                gameView.idsToRemove.add(id)
+                tag = "remove"
+            }
         }
     }
     override fun draw(canvas: Canvas) {
-        if(!isBitmap)
-            canvas?.drawRect(posX, posY, posX + sizeX, posY + sizeY, paint)
-        else {
-            val aRect = RectF(posX, posY, posX + sizeX , posY + sizeY)//existerar för att kunna ändra storleken på objectet med frihet genom sizeX och sizeY
-            canvas.drawBitmap(bitmap, null, aRect, paint)
+        if(!tag.equals("remove")) {
+            if (!isBitmap)
+                canvas?.drawRect(posX, posY, posX + sizeX, posY + sizeY, paint)
+            else {
+                val aRect = RectF(
+                    posX,
+                    posY,
+                    posX + sizeX,
+                    posY + sizeY
+                )//existerar för att kunna ändra storleken på objectet med frihet genom sizeX och sizeY
+                canvas.drawBitmap(bitmap, null, aRect, paint)
+            }
         }
     }
+    private fun increaseDifficulty(){
+        if((gameView.score - 10) >= difficultyIncreaseThreshold) {
+            speedY *= 1.5f
+            difficultyIncreaseThreshold += 10
+        }
+    }
+
 
     private fun detectCollision(){
         for (it in gameView.objects){
@@ -242,7 +252,7 @@ class Paddle(aGameView: GameView):Object() {
                 }
                 else if(sqrt((it.posX - (posX + sizeX)).pow(2) + (it.posY - (posY + sizeY)).pow(2)) <= it.size){
                     inCollisionObjects.add(it)
-                    onCollision(it, posX + sizeX, posX + sizeX)
+                    onCollision(it, posX + sizeX, posY + sizeY)
                 }
 
                 else if(abs(it.posY-posY) <= it.size && it.posX > posX && it.posX <(posX + sizeX)){//träffar rektangeln uppefrån
@@ -350,6 +360,5 @@ class Paddle(aGameView: GameView):Object() {
             }
         }
     }
-
 
 }
