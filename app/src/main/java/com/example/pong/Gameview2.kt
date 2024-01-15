@@ -34,13 +34,13 @@ class GameView2(context: Context): SurfaceView(context), SurfaceHolder.Callback,
     val pongBallDrawables = arrayOf(R.drawable.ball3, R.drawable.ball3_1,R.drawable.bomb1)
     val paddleDrawables = arrayOf(R.drawable.beampaddle2, R.drawable.beampaddle2_1,R.drawable.saber1_2)
 
-    // Random index for each type
+
     val randomEnemy = (0 until enemyDrawables.size).random()
     val randomPongBall = (0 until pongBallDrawables.size).random()
     val randomPaddle = (0 until paddleDrawables.size).random()
     private val random = (0..4).random()
 
-//yes
+
     var idsToRemove: ArrayList<Int> = ArrayList()
     var objectsToAdd: ArrayList<Object> = ArrayList()
 
