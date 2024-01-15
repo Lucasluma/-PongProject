@@ -15,7 +15,7 @@ import kotlin.math.sqrt
 
 class Enemy(aGameView: GameView2):Object() {
     override var name: String = ""
-    override val tag: String = "Enemy"
+    override var tag: String = "BallEnemy"
     override var posX = 0f
     override var posY = 0f
     override var id: Int //varje objekt har en speciell id så att kollisions kan fungera
@@ -25,18 +25,13 @@ class Enemy(aGameView: GameView2):Object() {
     override var sizeY = 0f
     override var speedX = 0f
     override var speedY = 0f
-    var firstIncrease = false
-    var secondIncrease = false
-    var thirdIncrease = false
-    var originalSpeedY = 0f
-    var originalSpeedX = 0f
 
 
 
     lateinit var bitmap: Bitmap
     var isBitmap: Boolean = false
     override var stillObject: Boolean = false
-
+    private var difficultyIncreaseThreshold: Int = 10//används för att increasa difficulty på rätt sätt
     var gameView: GameView2
     var inCollisionObjects: ArrayList<Object> = ArrayList()
 
@@ -55,9 +50,6 @@ class Enemy(aGameView: GameView2):Object() {
         posX = aPosX
         posY = aPosY
         speedX = aSpeedX
-        originalSpeedX = aSpeedX
-
-        originalSpeedY = aSpeedY
         size = aSize
         speedY = aSpeedY
         paint.color = color
@@ -68,116 +60,58 @@ class Enemy(aGameView: GameView2):Object() {
         posX = aPosX
         posY = aPosY
         speedX = aSpeedX
-        originalSpeedX = aSpeedX
         size = aSize
         speedY = aSpeedY
-        originalSpeedY = aSpeedY
         bitmap = aBitmap
         isBitmap = true
         gameView = aGameView
     }
 
     override fun update(){
-        if(!stillObject) {
-
-
-
+        if(!stillObject && !tag.equals("remove")) {
             increaseDifficulty()
             posY += speedY
             posX += speedX
-            println(speedY)
-            if(gameView.score > gameView.bestScore)
-                gameView.bestScore = gameView.score
-            detectCollision()
-            detectExistCollision()
             detectBorderCollision()
         }
 
     }
 
     private fun increaseDifficulty(){
-
-        if(gameView.score == 10 && !firstIncrease) {
+        if((gameView.score - 10) >= difficultyIncreaseThreshold) {
             speedY *= 1.5f
-            firstIncrease = true
-
+            difficultyIncreaseThreshold += 10
         }
-        else if (gameView.score == 20 && !secondIncrease){
-            speedY *= 1.5f
-            secondIncrease = true
-        }
-
-        else if(gameView.score == 30 && !thirdIncrease){
-            speedY *= 1.5f
-            thirdIncrease = true
-
-        }
-
     }
     private fun onCollision(collision: Object, collisionPosX: Float, collisionPosY: Float) {//när ett object kolliderar
-        if(collision.tag.contains("Ball") || collision.tag.contains("Rect")) {
-            ballBounce(collisionPosX, collisionPosY)
-        }
-        if(collision.name.equals("Paddle"))
-            gameView.score++
-        if(collision.tag.contains("Enemy")) {
-            gameView.objects.remove(collision)
-        }
+
     }
     private fun onExitCollision(collision: Object) {//när ett object som kolliderade innan går ut och slutar kollidera
     }
     private fun detectBorderCollision() {
         if (posX - size <= 0) {//Left
-            ballBounce(0f, posY)
         }
         if (posX + size > gameView.limit.right) {//Right
-            ballBounce(gameView.limit.right.toFloat(), posY)
         }
         if (posY - size <= 0) {//Top
-            ballBounce(posX, 0f)
         }
         if (posY + size > gameView.limit.bottom) {//Bottom
-            val handler = android.os.Handler(Looper.getMainLooper())
-            posY = 100f
-            handler.post {
-                val builder = AlertDialog.Builder(gameView.context)
-                builder.setMessage("You lose \nYour score is: ${gameView.score}")
-                    .setTitle("Game over")
-                    .setCancelable(false)
-                    .setPositiveButton("Save Score "){dialog, _ ->
-
-                        gameView.saveScore()
-                        dialog.dismiss()
-
-                    }
-
-                    .setNegativeButton("Replay"){dialog, _ ->
-                        dialog.dismiss()
-                        gameView.score = 0
-                        gameView.stop = false
-                        firstIncrease = false
-                        secondIncrease = false
-                        thirdIncrease = false
-                        speedY = originalSpeedY
-                        speedX = originalSpeedX
-                    }
-
-
-
-                val dialog = builder.create()
-                dialog.show()
-
+            if(posY-size > gameView.limit.bottom) {
+                gameView.idsToRemove.add(id)
+                tag = "remove"
             }
-            gameView.stop = true
         }
     }
 
     override fun draw(canvas: Canvas) {
-        if(!isBitmap)
-            canvas?.drawCircle(posX,posY, size, paint)
-        else {
-            val aRect = RectF(posX - size, posY - size, posX + size , posY + size) // what is this for ?
-            canvas.drawBitmap(bitmap, null, aRect, paint)
+        if(!tag.equals("remove")) {
+            if (!isBitmap)
+                canvas?.drawCircle(posX, posY, size, paint)
+            else {
+                val aRect =
+                    RectF(posX - size, posY - size, posX + size, posY + size) // what is this for ?
+                canvas.drawBitmap(bitmap, null, aRect, paint)
+            }
         }
 
     }
@@ -195,9 +129,9 @@ class Enemy(aGameView: GameView2):Object() {
         }
 
         //de här bara finns för testning
-        println("angleDif = $angleDifference  collisionAng = $collisionAngle  speedAng = $speedAngle")
-        println("collisionX = $collisionPosX  collisionY = $collisionPosY  posX = $posX  posY = $posY")
-        println("trueX = ${trueDistance(posX, collisionPosX)}  trueY = ${trueDistance(posY, collisionPosY)}")
+        //println("angleDif = $angleDifference  collisionAng = $collisionAngle  speedAng = $speedAngle")
+        //println("collisionX = $collisionPosX  collisionY = $collisionPosY  posX = $posX  posY = $posY")
+        //println("trueX = ${trueDistance(posX, collisionPosX)}  trueY = ${trueDistance(posY, collisionPosY)}")
 
         if(angleDifference >= 90 || collisionAngle == speedAngle) {//om skillnaden i grader är större än 90 så betyder det att ett object träffade bollen inte att bollen träffade den och vill man flytta iväg från den
             nextSpeedAngle = collisionAngle +180//och på så sätt man flyttar iväg från den man väljer vinkeln på motsatt sida
@@ -230,9 +164,9 @@ class Enemy(aGameView: GameView2):Object() {
             else
                 nextSpeedAngle = speedAngle - 180f *(1f- angleDifference/90f)
         }
-        println("nextspeedangle = $nextSpeedAngle")
-        println("cos = ${cos(nextSpeedAngle)}")
-        println("sin = ${sin(nextSpeedAngle)}")
+        //println("nextspeedangle = $nextSpeedAngle")
+        //println("cos = ${cos(nextSpeedAngle)}")
+        //println("sin = ${sin(nextSpeedAngle)}")
 
         speedX = cos((nextSpeedAngle/360f)*(2f* PI.toFloat())) * diagonalSpeed//på så sätt man ändrar riktningen på hastigheten men behåller samma hastighet
         speedY = sin((nextSpeedAngle/360)*(2* PI.toFloat())) * diagonalSpeed

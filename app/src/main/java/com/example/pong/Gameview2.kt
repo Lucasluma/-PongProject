@@ -13,6 +13,7 @@ import android.view.SurfaceHolder
 import android.view.SurfaceView
 import androidx.core.graphics.scale
 import androidx.fragment.app.commit
+import kotlin.random.Random
 
 class GameView2(context: Context): SurfaceView(context), SurfaceHolder.Callback, Runnable{
     var thread: Thread? = null
@@ -41,6 +42,8 @@ class GameView2(context: Context): SurfaceView(context), SurfaceHolder.Callback,
     private val random = (0..4).random()
 
 
+    var idsToRemove: ArrayList<Int> = ArrayList()
+    var objectsToAdd: ArrayList<Object> = ArrayList()
 
     private val imgId = arrayOf(
         R.drawable.planetjpg, R.drawable.cometcrash, R.drawable.planetearth, R.drawable.planet2,
@@ -85,6 +88,15 @@ class GameView2(context: Context): SurfaceView(context), SurfaceHolder.Callback,
         if (mHolder != null) {
             mHolder?.addCallback(this)
         }
+ EnemyGenerating
+        //objects.add(Enemy(this, "Enemy", 300f, 100f, 5f,
+        //    14f,50f,BitmapFactory.decodeResource(context.resources, R.drawable.spacecargo)))
+        objects.add(PongBall2(this, "PongBall", 300f, 100f, 5f,
+            14f,50f,BitmapFactory.decodeResource(context.resources, R.drawable.ball3)))
+        objects.add(Paddle2(this, "Paddle", 300f, 1400f, 0f,
+            0f,300f,50f,BitmapFactory.decodeResource(context.resources, R.drawable.beampaddle2)))
+        objects.add(EnemyGenerator(this, 1000f, 4f, 200f, 500f, 200f))
+
         objects.add(
             Enemy(
                 this, "Enemy", 400f, 100f, 5f,
@@ -105,6 +117,7 @@ class GameView2(context: Context): SurfaceView(context), SurfaceHolder.Callback,
         )
 
 
+
     }
 
 
@@ -122,8 +135,13 @@ class GameView2(context: Context): SurfaceView(context), SurfaceHolder.Callback,
     }
 
     fun update(){
-        objects.forEach{
-            it.update()
+        try {
+            objects.forEach{
+                it.update()
+            }
+        }
+        finally {
+
         }
     }
 
@@ -196,6 +214,32 @@ class GameView2(context: Context): SurfaceView(context), SurfaceHolder.Callback,
             if(!stop)
                 update()
             draw()
+ EnemyGenerating
+            for(i in idsToRemove) {//eftersom det ställde till mycket problem med att remova objects blir det en safe metod här för att remova
+                var posToRemove: Int = -1//börjar vid -1 eftersom första borde vara 0 och posToRemove++ händer varje gång
+                var okToRemove: Boolean = false
+                for(x in objects) {//på så sätt removar man object utan att ha problem med for satser innan som i update
+                    posToRemove++
+                   if(i == x.id) {
+                        okToRemove = true
+                        break
+                    }
+                }
+                if(okToRemove)
+                    objects.removeAt(posToRemove)
+                if(idsToRemove.indexOf(i) == idsToRemove.count() -1) {
+                    println(objects.count())
+                    idsToRemove = ArrayList()
+                }
+
+            }
+            objectsToAdd.forEach{//samma som rakt uppe händer det problem med for loopen i update när man försöker adda normalt så det får bli så
+                objects.add(it)
+                if(objectsToAdd.indexOf(it) == objectsToAdd.count() -1){
+                    objectsToAdd = ArrayList()
+                }
+            }
+
 
         }
     }

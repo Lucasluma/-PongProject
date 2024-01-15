@@ -39,8 +39,7 @@ android {
 }
 
 dependencies {
-
-
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.1")
     implementation ("com.google.code.gson:gson:2.8.8")
     implementation("androidx.core:core-ktx:1.9.0")
     implementation("androidx.fragment:fragment-ktx:1.6.2")
