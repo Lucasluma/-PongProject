@@ -87,14 +87,10 @@ class GameView2(context: Context): SurfaceView(context), SurfaceHolder.Callback,
         if (mHolder != null) {
             mHolder?.addCallback(this)
         }
-        objects.add(EnemyGenerator(this, 1000f, 4f, 200f, 500f, 200f))
+        objects.add(EnemyGenerator(this, 6000f, 4f,
+                               200f, 500f, 200f))
 
-        objects.add(
-            Enemy(
-                this, "Enemy", 400f, 100f, 5f,
-                14f, 50f, BitmapFactory.decodeResource(context.resources, enemyDrawables[randomEnemy])
-            )
-        )
+
         objects.add(
             PongBall2(
                 this, "PongBall", 300f, 100f, 5f,
@@ -103,7 +99,7 @@ class GameView2(context: Context): SurfaceView(context), SurfaceHolder.Callback,
         )
         objects.add(
             Paddle2(
-                this, "Paddle", 300f, 2200f, 0f,
+                this, "Paddle", 300f,  2200f, 0f,
                 0f, 400f, 75f, BitmapFactory.decodeResource(context.resources, paddleDrawables[randomPaddle])
             )
         )
@@ -127,14 +123,14 @@ class GameView2(context: Context): SurfaceView(context), SurfaceHolder.Callback,
     }
 
     fun update(){
-        try {
+
             objects.forEach{
                 it.update()
-            }
-        }
-        finally {
 
-        }
+            }
+        println("limit = ${limit.bottom}")
+
+
     }
 
     override fun onTouchEvent(event: MotionEvent?): Boolean {
