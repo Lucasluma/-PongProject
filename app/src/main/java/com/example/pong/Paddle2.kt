@@ -26,6 +26,7 @@ class Paddle2(aGameView: GameView2):Object() {
     private var gameView: GameView2
 
     private var inCollisionObjects: ArrayList<Object> = ArrayList()
+    var idsToRemove: ArrayList<Int> = ArrayList()
 
 
     init {
@@ -79,9 +80,8 @@ class Paddle2(aGameView: GameView2):Object() {
             if(gameView.touchX != null)
                 posX = gameView.touchX!! - sizeX/2
             //Sets the position of paddle to right of screen if paddle goes "outside" screen
-
-            detectCollision()
             detectExistCollision()
+            detectCollision()
             detectBorderCollision()
         }
     }
@@ -266,10 +266,10 @@ class Paddle2(aGameView: GameView2):Object() {
     }
     fun detectExistCollision(){
         for(it in inCollisionObjects) {
-            if(gameView.idsToRemove.contains(it.id)){
-                inCollisionObjects.remove(it)
+            if(idsToRemove.contains(it.id)) {
+                idsToRemove.add(it.id)
             }
-            else if (it.tag.contains("Rect")) {
+            if (it.tag.contains("Rect")) {
                 if(it.posX >= posX && it.posX <=(posX + sizeX) && it.posY >= posY && it.posY <=(posY + sizeY)) {
                     continue
                 }
@@ -310,7 +310,7 @@ class Paddle2(aGameView: GameView2):Object() {
                     continue
                 }
                 else {
-                    inCollisionObjects.remove(it)
+                    idsToRemove.add(it.id)
                     onExitCollision(it)
                 }
 
@@ -347,11 +347,29 @@ class Paddle2(aGameView: GameView2):Object() {
                     continue
                 }
                 else {
-                    inCollisionObjects.remove(it)
+                    idsToRemove.add(it.id)
                     onExitCollision(it)
                 }
             }
         }
+        for(i in idsToRemove) {//eftersom det ställde till mycket problem med att remova objects blir det en safe metod här för att remova
+            var posToRemove: Int = -1//börjar vid -1 eftersom första borde vara 0 och posToRemove++ händer varje gång
+            var okToRemove: Boolean = false
+            for(x in inCollisionObjects) {//på så sätt removar man object utan att ha problem med for satser innan som i update
+                posToRemove++
+                if(i == x.id) {
+                    okToRemove = true
+                    break
+                }
+            }
+            if(okToRemove)
+                inCollisionObjects.removeAt(posToRemove)
+            if(idsToRemove.indexOf(i) == idsToRemove.count() -1) {
+                idsToRemove = ArrayList()
+            }
+
+        }
+
     }
 
 }

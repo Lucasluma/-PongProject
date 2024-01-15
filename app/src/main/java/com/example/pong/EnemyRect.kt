@@ -28,7 +28,8 @@ class EnemyRect(aGameView: GameView2):Object() {
     private var paint = Paint()
     private var gameView: GameView2
     private var inCollisionObjects: ArrayList<Object> = ArrayList()
-    private var difficultyIncreaseThreshold: Int = 10//används för att increasa difficulty på rätt sätt
+    private var difficultyIncreaseThreshold: Int = 0//används för att increasa difficulty på rätt sätt
+
 
     init {
         gameView = aGameView

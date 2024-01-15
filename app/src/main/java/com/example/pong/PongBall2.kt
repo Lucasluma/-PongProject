@@ -30,7 +30,7 @@ class PongBall2(aGameView: GameView2):Object() {
     lateinit var bitmap: Bitmap
     var isBitmap: Boolean = false
     override var stillObject: Boolean = false
-    var difficultyIncreaseThreshold: Int = 10
+    var difficultyIncreaseThreshold: Int = 0
     var gameView: GameView2
     var inCollisionObjects: ArrayList<Object> = ArrayList()
 
@@ -219,13 +219,15 @@ class PongBall2(aGameView: GameView2):Object() {
 
     }
      private fun resetGame(){
+         //bara enemyGenerator resettas själv i sig själv
         gameView.objects.forEach{
             if(it.tag.contains("Enemy")){
                 gameView.idsToRemove.add(it.id)
                 it.tag = "remove"
             }
         }
-        while(difficultyIncreaseThreshold -10 != 0) {
+        while(difficultyIncreaseThreshold -10 >= 0) {
+
             speedX /= 1.5f
             speedY /= 1.5f
             difficultyIncreaseThreshold -= 10
@@ -314,6 +316,7 @@ class PongBall2(aGameView: GameView2):Object() {
         }
     }
     private fun detectExistCollision(){
+
         for(it in inCollisionObjects) {
             if (it.tag.contains("Ball")) {
                 if (sqrt((posX - it.posX).pow(2) + (posY - it.posY).pow(2)) > size + it.size) {

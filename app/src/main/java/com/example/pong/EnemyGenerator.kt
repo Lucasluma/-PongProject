@@ -19,6 +19,7 @@ class EnemyGenerator(aGameView: GameView2, aLoopTime: Float, aDefaultEnemySpeed:
     override var stillObject: Boolean = true
     var gameView: GameView2
     override var id: Int
+    var difficultyIncreaseThreshold: Int = 0
 
     var loopTime: Float = 0f
     var timeLeft: Float = 0f
@@ -45,6 +46,7 @@ class EnemyGenerator(aGameView: GameView2, aLoopTime: Float, aDefaultEnemySpeed:
 
 
     override fun update() {
+        increaseDifficulty()
         if(myThread.isAlive) {
             timeLeft = myThread.getTime()
 
@@ -57,6 +59,20 @@ class EnemyGenerator(aGameView: GameView2, aLoopTime: Float, aDefaultEnemySpeed:
             myThread = TimerThread(loopTime)
             myThread.start()
             timeLeft = 10000f//för att den här if satsen inte ska kallas igen medans man får nya tiden från nya thread
+        }
+    }
+    fun increaseDifficulty(){
+        if((gameView.score - 10) >= difficultyIncreaseThreshold) {
+            if(loopTime - 1000f >= 500)
+                loopTime -= 1000f
+            difficultyIncreaseThreshold += 10
+        }
+
+    }
+    fun reset(){
+        while(difficultyIncreaseThreshold -10 != 0) {
+            loopTime += 1000f
+            difficultyIncreaseThreshold -= 10
         }
     }
     fun spawnEnemies(){
@@ -108,6 +124,8 @@ class EnemyGenerator(aGameView: GameView2, aLoopTime: Float, aDefaultEnemySpeed:
             if(threadWasRunning) {// och på så sätt är genereringen back in action när spelet startar igen
                 myThread = TimerThread(loopTime)
                 myThread.start()
+                if(gameView.score == 0)
+                    reset()
                 threadWasRunning = false
             }
         }

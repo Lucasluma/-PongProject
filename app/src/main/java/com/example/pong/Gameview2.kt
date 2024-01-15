@@ -81,10 +81,10 @@ class GameView2(context: Context): SurfaceView(context), SurfaceHolder.Callback,
         //objects.add(Enemy(this, "Enemy", 300f, 100f, 5f,
         //    14f,50f,BitmapFactory.decodeResource(context.resources, R.drawable.spacecargo)))
         objects.add(PongBall2(this, "PongBall", 300f, 100f, 5f,
-            14f,50f,BitmapFactory.decodeResource(context.resources, R.drawable.ball3)))
+            8f,50f,BitmapFactory.decodeResource(context.resources, R.drawable.ball3)))
         objects.add(Paddle2(this, "Paddle", 300f, 1400f, 0f,
             0f,300f,50f,BitmapFactory.decodeResource(context.resources, R.drawable.beampaddle2)))
-        objects.add(EnemyGenerator(this, 1000f, 4f, 200f, 500f, 200f))
+        objects.add(EnemyGenerator(this, 6500f, 4f, 200f, 500f, 200f))
 
 
     }
