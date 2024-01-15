@@ -2,4 +2,6 @@
     <string name="app_name">Pong</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="solar_crash">Solar Crash</string>
+    <string name="pong">Pong</string>
 </resources>

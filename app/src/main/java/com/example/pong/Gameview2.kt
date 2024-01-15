@@ -13,7 +13,6 @@ import android.view.SurfaceHolder
 import android.view.SurfaceView
 import androidx.core.graphics.scale
 import androidx.fragment.app.commit
-import kotlin.random.Random
 
 class GameView2(context: Context): SurfaceView(context), SurfaceHolder.Callback, Runnable{
     var thread: Thread? = null
@@ -88,21 +87,9 @@ class GameView2(context: Context): SurfaceView(context), SurfaceHolder.Callback,
         if (mHolder != null) {
             mHolder?.addCallback(this)
         }
- EnemyGenerating
-        //objects.add(Enemy(this, "Enemy", 300f, 100f, 5f,
-        //    14f,50f,BitmapFactory.decodeResource(context.resources, R.drawable.spacecargo)))
-        objects.add(PongBall2(this, "PongBall", 300f, 100f, 5f,
-            14f,50f,BitmapFactory.decodeResource(context.resources, R.drawable.ball3)))
-        objects.add(Paddle2(this, "Paddle", 300f, 1400f, 0f,
-            0f,300f,50f,BitmapFactory.decodeResource(context.resources, R.drawable.beampaddle2)))
+
         objects.add(EnemyGenerator(this, 1000f, 4f, 200f, 500f, 200f))
 
-        objects.add(
-            Enemy(
-                this, "Enemy", 400f, 100f, 5f,
-                14f, 50f, BitmapFactory.decodeResource(context.resources, enemyDrawables[randomEnemy])
-            )
-        )
         objects.add(
             PongBall2(
                 this, "PongBall", 300f, 100f, 5f,
@@ -135,14 +122,11 @@ class GameView2(context: Context): SurfaceView(context), SurfaceHolder.Callback,
     }
 
     fun update(){
-        try {
+
             objects.forEach{
                 it.update()
             }
-        }
-        finally {
 
-        }
     }
 
     override fun onTouchEvent(event: MotionEvent?): Boolean {
@@ -214,7 +198,7 @@ class GameView2(context: Context): SurfaceView(context), SurfaceHolder.Callback,
             if(!stop)
                 update()
             draw()
- EnemyGenerating
+
             for(i in idsToRemove) {//eftersom det ställde till mycket problem med att remova objects blir det en safe metod här för att remova
                 var posToRemove: Int = -1//börjar vid -1 eftersom första borde vara 0 och posToRemove++ händer varje gång
                 var okToRemove: Boolean = false
