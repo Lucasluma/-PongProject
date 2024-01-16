@@ -34,7 +34,7 @@ class GameView2(context: Context): SurfaceView(context), SurfaceHolder.Callback,
     val pongBallDrawables = arrayOf(R.drawable.ball3, R.drawable.ball3_1,R.drawable.bomb1)
     val paddleDrawables = arrayOf(R.drawable.beampaddle2, R.drawable.beampaddle2_1,R.drawable.saber1_2)
 
-    // Random index for each type
+
     val randomEnemy = (0 until enemyDrawables.size).random()
     val randomPongBall = (0 until pongBallDrawables.size).random()
     val randomPaddle = (0 until paddleDrawables.size).random()
@@ -88,7 +88,8 @@ class GameView2(context: Context): SurfaceView(context), SurfaceHolder.Callback,
             mHolder?.addCallback(this)
         }
 
-        objects.add(EnemyGenerator(this, 6000f, 3f,
+
+       objects.add(EnemyGenerator(this, 6000f, 3f,
                                 150f, 300f, 75f))
 
         objects.add(
@@ -99,7 +100,7 @@ class GameView2(context: Context): SurfaceView(context), SurfaceHolder.Callback,
         )
         objects.add(
             Paddle2(
-                this, "Paddle", 300f, 2200f, 0f,
+                this, "Paddle", 300f,  2200f, 0f,
                 0f, 400f, 75f, BitmapFactory.decodeResource(context.resources, paddleDrawables[randomPaddle])
             )
         )
@@ -126,6 +127,7 @@ class GameView2(context: Context): SurfaceView(context), SurfaceHolder.Callback,
 
             objects.forEach{
                 it.update()
+
             }
 
     }
