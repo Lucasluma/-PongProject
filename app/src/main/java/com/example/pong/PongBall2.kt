@@ -75,6 +75,7 @@ class PongBall2(aGameView: GameView2):Object() {
             detectCollision()
             detectExistCollision()
             detectBorderCollision()
+
         }
 
     }
