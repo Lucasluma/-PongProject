@@ -35,7 +35,7 @@ class GameView2(context: Context): SurfaceView(context), SurfaceHolder.Callback,
     val paddleDrawables = arrayOf(R.drawable.beampaddle2, R.drawable.beampaddle2_1,R.drawable.saber1_2)
 
 
-    val randomEnemy = (0 until enemyDrawables.size).random()
+   // val randomEnemy = (0 until enemyDrawables.size).random()
     val randomPongBall = (0 until pongBallDrawables.size).random()
     val randomPaddle = (0 until paddleDrawables.size).random()
     private val random = (0..4).random()

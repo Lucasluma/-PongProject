@@ -33,6 +33,7 @@ class GameView(context: Context):SurfaceView(context), SurfaceHolder.Callback, R
     var mutablebackground = background1.copy(Bitmap.Config.ARGB_8888, true)
 
 
+
     init {
         var playerList = DataManager.playerListM1
         if (!playerList.isEmpty()) {
@@ -53,11 +54,15 @@ class GameView(context: Context):SurfaceView(context), SurfaceHolder.Callback, R
         if (mHolder != null){
             mHolder?.addCallback(this)
         }
-        objects.add(PongBall(this, "PongBall", 300f, 100f, 5f,
+        objects.add(PongBall(this, "PongBall", 300f, 100f, 12f,
             14f,50f,BitmapFactory.decodeResource(context.resources, R.drawable.asteroid)))
-        objects.add(Paddle(this, "Paddle", 300f, 1800f, 0f,
-            0f,300f,50f,BitmapFactory.decodeResource(context.resources, R.drawable.paddel2)))
+
+
+
+        objects.add(Paddle(this, "Paddle", 300f, 2200f, 0f,
+            0f,300f,50f,BitmapFactory.decodeResource(context.resources, R.drawable.paddel)))
     }
+
 
 
 
@@ -74,10 +79,12 @@ class GameView(context: Context):SurfaceView(context), SurfaceHolder.Callback, R
         thread?.join()
     }
 
-    fun update(){
+   fun update(){
         objects.forEach{
             it.update()
+
         }
+
     }
 
     override fun onTouchEvent(event: MotionEvent?): Boolean {

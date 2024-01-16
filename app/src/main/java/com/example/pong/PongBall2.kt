@@ -6,6 +6,7 @@ import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.RectF
 import android.os.Looper
+import android.text.Html
 import androidx.core.content.ContextCompat
 import kotlin.math.PI
 import kotlin.math.abs
@@ -128,7 +129,8 @@ class PongBall2(aGameView: GameView2):Object() {
 
                 val builder = AlertDialog.Builder(gameView.context, R.style.CustomAlertDialog)
 
-                builder.setMessage("You lose \nYour score is: ${gameView.score}")
+                builder.setMessage(Html.fromHtml("<font color='#988A0A'><b>You lose</b>" +
+                        "\n<b>Your score is:</b>"+" ${gameView.score}</b></font>"))
                     .setTitle("Game over")
                     .setCancelable(false)
                     .setPositiveButton("Save Score ") { dialog, _ ->
