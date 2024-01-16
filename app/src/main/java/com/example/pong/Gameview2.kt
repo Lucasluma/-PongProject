@@ -87,9 +87,10 @@ class GameView2(context: Context): SurfaceView(context), SurfaceHolder.Callback,
         if (mHolder != null) {
             mHolder?.addCallback(this)
         }
-        objects.add(EnemyGenerator(this, 6000f, 4f,
-                               200f, 500f, 200f))
 
+
+       objects.add(EnemyGenerator(this, 6000f, 3f,
+                                150f, 300f, 75f))
 
         objects.add(
             PongBall2(
@@ -128,8 +129,6 @@ class GameView2(context: Context): SurfaceView(context), SurfaceHolder.Callback,
                 it.update()
 
             }
-        println("limit = ${limit.bottom}")
-
 
     }
 

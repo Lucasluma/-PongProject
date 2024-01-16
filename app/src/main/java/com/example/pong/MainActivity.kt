@@ -3,9 +3,12 @@ package com.example.pong
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.view.animation.AnimationUtils
+import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import com.example.pong.databinding.ActivityMainBinding
+
 // Lucas, Ali och Abdulrahman
 
 class MainActivity : AppCompatActivity() {
@@ -13,6 +16,8 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binder: ActivityMainBinding
     private val background = (0)
+    private val handler = android.os.Handler()
+    private val delayMillis = 600 // Adjust the blinking speed here
 
 
     @SuppressLint("Range")
@@ -22,7 +27,13 @@ class MainActivity : AppCompatActivity() {
 
         setContentView(binder.root)
 
+        val redCircle = findViewById<ImageView>(R.id.redCircle)
+        val greenCircle = findViewById<ImageView>(R.id.greenCircle)
+
         SpinStar()
+        startBlinkingAnimation(redCircle, greenCircle)
+      //  stopBlinkingAnimation()
+
 
 
         var firstRun = DataManager.wasUploaded
@@ -96,6 +107,26 @@ class MainActivity : AppCompatActivity() {
         val spinImg = binder.twinkel
 
         spinImg.animation = spin
+    }
+
+
+    // Call this function to start the blinking animation
+    private fun startBlinkingAnimation(redCircle: ImageView, greenCircle: ImageView) {
+        handler.post(object : Runnable {
+            private var isRedVisible = true
+
+            override fun run() {
+                isRedVisible = !isRedVisible
+                redCircle.visibility = if (isRedVisible) View.VISIBLE else View.INVISIBLE
+                greenCircle.visibility = if (!isRedVisible) View.VISIBLE else View.INVISIBLE
+                handler.postDelayed(this, delayMillis.toLong())
+            }
+        })
+    }
+
+    // Call this function to stop the blinking animation
+    private fun stopBlinkingAnimation() {
+        handler.removeCallbacksAndMessages(null)
     }
 
 
