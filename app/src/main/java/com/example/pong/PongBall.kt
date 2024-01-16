@@ -94,6 +94,7 @@ class PongBall(aGameView: GameView):Object() {
 
     }
 
+
     private fun increaseDifficulty(){
 
         if(gameView.score == 10 && !firstIncrease) {
@@ -113,6 +114,7 @@ class PongBall(aGameView: GameView):Object() {
         }
 
     }
+
     private fun onCollision(collision: Object, collisionPosX: Float, collisionPosY: Float) {//när ett object kolliderar
         if(collision.tag.contains("Ball") || collision.tag.contains("Rect")) {
             ballBounce(collisionPosX, collisionPosY)
