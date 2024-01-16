@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="CustomAlertDialog" parent="Theme.AppCompat.Dialog.Alert">
+        <item name="android:textColor">@color/yellowgold</item>
+        <!-- Add any other customizations you need for your dialog -->
+    </style>
+</resources>

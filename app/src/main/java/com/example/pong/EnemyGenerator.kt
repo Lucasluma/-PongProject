@@ -2,8 +2,6 @@ package com.example.pong
 
 import android.graphics.BitmapFactory
 import android.graphics.Canvas
-import android.os.Looper
-import androidx.lifecycle.LifecycleCoroutineScope
 import kotlin.random.Random
 
 class EnemyGenerator(aGameView: GameView2, aLoopTime: Float, aDefaultEnemySpeed: Float,aDefaultEnemySizeX: Float, aDefaultEnemySizeY: Float, aDefaultRoundEnemySize: Float): Object(){
@@ -60,23 +58,31 @@ class EnemyGenerator(aGameView: GameView2, aLoopTime: Float, aDefaultEnemySpeed:
         }
     }
     fun spawnEnemies(){
-        var tempRandom = Random.nextInt(0, 2)
-        if(tempRandom == 0) {
+        val enemyRectDrawables = arrayOf(R.drawable.spacecargo1_1, R.drawable.spacecargo1_2, R.drawable.spacenuke1_1,
+                                         R.drawable.shipdebri1_1,R.drawable.shipdebri1_2)
+
+        val tempRandom = Random.nextInt(0, 1)
+
+        if (tempRandom == 0) {
+            val randomDrawableIndex = (0 until enemyRectDrawables.size).random()
             gameView.objectsToAdd.add(
                 EnemyRect(
                     gameView,
                     "enemyRect$id",
-                    Random.nextDouble(0.0, gameView.limit.right.toDouble() - enemyDefaultSizeX)
-                        .toFloat(),
+                    Random.nextDouble(0.0, gameView.limit.right.toDouble() - enemyDefaultSizeX).toFloat(),
                     0f - enemyDefaultSizeY,
                     0f,
                     enemyDefaultSpeed,
                     enemyDefaultSizeX,
                     enemyDefaultSizeY,
-                    BitmapFactory.decodeResource(gameView.context.resources, R.drawable.spacenuke)
+                    BitmapFactory.decodeResource(
+                        gameView.context.resources,
+                        enemyRectDrawables[randomDrawableIndex]
+                    )
                 )
             )
         }
+
         else if(tempRandom == 1){
             gameView.objectsToAdd.add(
                 Enemy(
@@ -87,7 +93,7 @@ class EnemyGenerator(aGameView: GameView2, aLoopTime: Float, aDefaultEnemySpeed:
                     0f,
                     enemyDefaultSpeed,
                     roundEnemyDefaultSize,
-                    BitmapFactory.decodeResource(gameView.context.resources, R.drawable.spacemine)
+                    BitmapFactory.decodeResource(gameView.context.resources, R.drawable.spacemine1_1)
                 )
             )
         }

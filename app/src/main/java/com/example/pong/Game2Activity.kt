@@ -9,6 +9,7 @@ class Game2Activity : AppCompatActivity() {
 
         private lateinit var binder: ActivityGame2Binding
 
+
         override fun onCreate(savedInstanceState: Bundle?) {
             super.onCreate(savedInstanceState)
             binder = ActivityGame2Binding.inflate(layoutInflater)
