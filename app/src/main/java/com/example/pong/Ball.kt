@@ -71,6 +71,11 @@ class Ball(aGameView: GameView):Object() {
             detectBorderCollision()
         }
     }
+
+    override fun start() {
+
+    }
+
     private fun onCollision(collision: Object, collisionPosX: Float, collisionPosY: Float) {//när ett object kolliderar
 
     }

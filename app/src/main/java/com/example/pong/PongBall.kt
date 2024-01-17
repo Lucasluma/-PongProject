@@ -94,6 +94,11 @@ class PongBall(aGameView: GameView):Object() {
 
     }
 
+    override fun start() {
+
+    }
+
+
 
     private fun increaseDifficulty(){
 

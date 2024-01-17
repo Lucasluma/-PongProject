@@ -1,4 +1,5 @@
 package com.example.pong
+import android.app.AlertDialog
 import android.content.Context
 import android.content.res.Resources
 import android.graphics.Bitmap
@@ -8,6 +9,7 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Rect
 import android.os.Bundle
+import android.os.Looper
 import android.view.MotionEvent
 import android.view.SurfaceHolder
 import android.view.SurfaceView
@@ -28,6 +30,9 @@ class GameView2(context: Context): SurfaceView(context), SurfaceHolder.Callback,
     var stop = false
     var touchX: Float? = null
     var touchY: Float? = null
+
+    var lives: Int = 3
+
     val mode = 2
     val enemyDrawables = arrayOf(R.drawable.spacecargo1_1, R.drawable.spacecargo1_2,
                                   R.drawable.spacemine1_1,R.drawable.spacenuke1_1)
@@ -38,7 +43,9 @@ class GameView2(context: Context): SurfaceView(context), SurfaceHolder.Callback,
    // val randomEnemy = (0 until enemyDrawables.size).random()
     val randomPongBall = (0 until pongBallDrawables.size).random()
     val randomPaddle = (0 until paddleDrawables.size).random()
+
     private val random = (0..4).random()
+    var gameOverUText: String = "no"//den texten ändras när man förlorar till yes och object kan se att man har förlorat och sen adda deras Id i texten. Vilket man kollar om den finns i texten när man förlorar, så på så sätt objects kan göra saker för en gång när man förlorar
 
 
     var idsToRemove: ArrayList<Int> = ArrayList()
@@ -88,6 +95,15 @@ class GameView2(context: Context): SurfaceView(context), SurfaceHolder.Callback,
             mHolder?.addCallback(this)
         }
 
+        //objects.add(Enemy(this, "Enemy", 300f, 100f, 5f,
+        //    14f,50f,BitmapFactory.decodeResource(context.resources, R.drawable.spacecargo)))
+        objects.add(PongBall2(this, "PongBall", 300f, 100f, 5f,
+            8f,50f,BitmapFactory.decodeResource(context.resources, R.drawable.ball3)))
+        objects.add(Paddle2(this, "Paddle", 300f, 1400f, 0f,
+            0f,300f,50f,BitmapFactory.decodeResource(context.resources, R.drawable.beampaddle2)))
+        objects.add(EnemyGenerator(this, 6500f, 4f, 200f, 500f, 200f))
+
+
 
        objects.add(EnemyGenerator(this, 6000f, 3f,
                                 150f, 300f, 75f))
@@ -104,6 +120,7 @@ class GameView2(context: Context): SurfaceView(context), SurfaceHolder.Callback,
                 0f, 400f, 75f, BitmapFactory.decodeResource(context.resources, paddleDrawables[randomPaddle])
             )
         )
+
 
 
 
@@ -160,8 +177,11 @@ class GameView2(context: Context): SurfaceView(context), SurfaceHolder.Callback,
                 textSize = 50f
                 color = Color.YELLOW
             }
+
+            lives(canvas, textPaint)//metoden som tar hand om liv
+
             canvas.drawText("Score: $score", 100f, 100f, textPaint)
-            canvas.drawText("Best Ever: $bestScore",  700f, 100f, textPaint)
+            canvas.drawText("Best Ever: $bestScore",  limit.right - 350f, 100f, textPaint)
 
         } finally {
             // Unlock the canvas in a final block to ensure it always happens
@@ -169,6 +189,45 @@ class GameView2(context: Context): SurfaceView(context), SurfaceHolder.Callback,
         }
     }
 
+    fun lives(canvas: Canvas, paint: Paint) {
+        //black heart: 🖤    red heard: ❤️
+        if(lives == 3)
+            canvas.drawText("❤️ ❤️ ❤️", limit.right/2f - 125f, 100f, paint)
+        else if(lives == 2) {
+            canvas.drawText("\uD83D\uDDA4 ❤️ ❤️", limit.right/2f - 125f, 100f, paint)
+        }
+        else if(lives == 1) {
+            canvas.drawText("\uD83D\uDDA4 \uD83D\uDDA4 ❤️", limit.right/2f - 125f, 100f, paint)
+        }
+        else if(!stop){
+            canvas.drawText("\uD83D\uDDA4 \uD83D\uDDA4 \uD83D\uDDA4", limit.right/2f - 125f, 100f, paint)
+            gameOverUText = "yes"
+            val handler = android.os.Handler(Looper.getMainLooper())
+            handler.post {
+                val builder = AlertDialog.Builder(context)
+                builder.setMessage("You lose \nYour score is: ${score}")
+                    .setTitle("Game over")
+                    .setCancelable(false)
+                    .setPositiveButton("Save Score "){dialog, _ ->
+
+                        saveScore()
+                        dialog.dismiss()
+
+                    }
+                    .setNegativeButton("Replay"){dialog, _ ->
+                        dialog.dismiss()
+                        score = 0
+                        lives = 3
+                        stop = false
+                        gameOverUText = "reset"
+                    }
+                val dialog = builder.create()
+                dialog.show()
+            }
+            stop = true
+        }
+
+    }
 
     fun saveScore(){
         game2Activity!!.supportFragmentManager.commit {

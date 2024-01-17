@@ -31,7 +31,7 @@ class Enemy(aGameView: GameView2):Object() {
     lateinit var bitmap: Bitmap
     var isBitmap: Boolean = false
     override var stillObject: Boolean = false
-    private var difficultyIncreaseThreshold: Int = 10//används för att increasa difficulty på rätt sätt
+    private var difficultyIncreaseThreshold: Int = 0//används för att increasa difficulty på rätt sätt
     var gameView: GameView2
     var inCollisionObjects: ArrayList<Object> = ArrayList()
 
@@ -74,6 +74,10 @@ class Enemy(aGameView: GameView2):Object() {
             posX += speedX
             detectBorderCollision()
         }
+
+    }
+
+    override fun start() {
 
     }
 
