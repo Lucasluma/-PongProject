@@ -76,6 +76,10 @@ class Enemy(aGameView: GameView2):Object() {
 
     }
 
+    override fun start() {
+
+    }
+
     private fun increaseDifficulty(){
         if((gameView.score - 10) >= difficultyIncreaseThreshold) {
             speedY *= 1.5f

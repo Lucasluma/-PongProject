@@ -94,6 +94,10 @@ class PongBall(aGameView: GameView):Object() {
 
     }
 
+    override fun start() {
+
+    }
+
     private fun increaseDifficulty(){
 
         if(gameView.score == 10 && !firstIncrease) {

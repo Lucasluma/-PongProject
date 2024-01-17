@@ -26,7 +26,7 @@ class PongBall2(aGameView: GameView2):Object() {
     override var speedX = 0f
     override var speedY = 0f
 
-
+    lateinit var paddle2: Paddle2
     lateinit var bitmap: Bitmap
     var isBitmap: Boolean = false
     override var stillObject: Boolean = false
@@ -64,7 +64,13 @@ class PongBall2(aGameView: GameView2):Object() {
         isBitmap = true
         gameView = aGameView
     }
-
+    override fun start() {
+        gameView.objects.forEach{
+            if(it is Paddle2){
+                paddle2 = it
+            }
+        }
+    }
     override fun update(){
         if(!stillObject) {
             increaseDifficulty()
@@ -75,19 +81,17 @@ class PongBall2(aGameView: GameView2):Object() {
             detectCollision()
             detectExistCollision()
             detectBorderCollision()
-
         }
 
     }
 
-    private fun increaseDifficulty(){
 
+    private fun increaseDifficulty(){
         if((gameView.score - 10) >= difficultyIncreaseThreshold) {
             speedY *= 1.5f
             speedX *= 1.5f
             difficultyIncreaseThreshold += 10
         }
-
     }
     private fun onCollision(collision: Object, collisionPosX: Float, collisionPosY: Float) {//när ett object kolliderar
         if(collision.tag.contains("Ball") || collision.tag.contains("Rect")) {
@@ -123,6 +127,7 @@ class PongBall2(aGameView: GameView2):Object() {
             ballBounce(posX, 0f)
         }
         if (posY + size > gameView.limit.bottom) {//Bottom
+            gameView.gameOverUText = "yes"
             val handler = android.os.Handler(Looper.getMainLooper())
             handler.post {
                 val builder = AlertDialog.Builder(gameView.context)
@@ -139,12 +144,10 @@ class PongBall2(aGameView: GameView2):Object() {
                     .setNegativeButton("Replay"){dialog, _ ->
                         dialog.dismiss()
                         gameView.score = 0
+                        gameView.gameOverUText = "reset"
                         gameView.stop = false
-                        resetGame()
+
                     }
-
-
-
                 val dialog = builder.create()
                 dialog.show()
 
@@ -159,6 +162,11 @@ class PongBall2(aGameView: GameView2):Object() {
         else {
             val aRect = RectF(posX - size, posY - size, posX + size , posY + size)//to draw the bitmap in a circle way
             canvas.drawBitmap(bitmap, null, aRect, paint)
+        }
+        if(gameView.gameOverUText.contains("reset") && !gameView.gameOverUText.contains("#$id#")) {//man kontrollerar här om man har förlorat eftersom draw runnar även när man förlorar
+            resetGame()
+            println("bruh: ${gameView.gameOverUText}")
+            gameView.gameOverUText += "#$id#"
         }
 
     }

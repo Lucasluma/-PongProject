@@ -79,6 +79,11 @@ class EnemyRect(aGameView: GameView2):Object() {
             detectBorderCollision()
         }
     }
+
+    override fun start() {
+
+    }
+
     private fun onCollision(collision: Object, collisionPosX: Float, collisionPosY: Float) {
     }
     private fun onExitCollision(collision: Object) {//när ett object som kolliderade innan går ut och slutar kollidera

@@ -47,20 +47,19 @@ class EnemyGenerator(aGameView: GameView2, aLoopTime: Float, aDefaultEnemySpeed:
 
     override fun update() {
         increaseDifficulty()
-        if(myThread.isAlive) {
-            timeLeft = myThread.getTime()
-
-        }
+        timeLeft = myThread.time
         if(timeLeft == 0f) {
             println("wtf")
-            myThread.stop = true
-            myThread.join()
             spawnEnemies()
-            myThread = TimerThread(loopTime)
-            myThread.start()
-            timeLeft = 10000f//för att den här if satsen inte ska kallas igen medans man får nya tiden från nya thread
+            myThread.time = loopTime
+            timeLeft = loopTime
         }
     }
+
+    override fun start() {
+
+    }
+
     fun increaseDifficulty(){
         if((gameView.score - 10) >= difficultyIncreaseThreshold) {
             if(loopTime - 1000f >= 500)
@@ -70,7 +69,7 @@ class EnemyGenerator(aGameView: GameView2, aLoopTime: Float, aDefaultEnemySpeed:
 
     }
     fun reset(){
-        while(difficultyIncreaseThreshold -10 != 0) {
+        while(difficultyIncreaseThreshold -10 >= 0) {
             loopTime += 1000f
             difficultyIncreaseThreshold -= 10
         }
@@ -112,22 +111,19 @@ class EnemyGenerator(aGameView: GameView2, aLoopTime: Float, aDefaultEnemySpeed:
         }
     }
     override fun draw(canvas: Canvas) {
-        if(gameView.stop) {
-            if (myThread.isAlive && !threadWasRunning) {
-                myThread.stop = true//på så sätt stoppas thread när spelet stoppas: draw fortfarande runnar när spelet stoppas
-                myThread.join()
-                threadWasRunning = true
-                timeLeft = 10000f
-            }
+        if(gameView.gameOverUText.contains("yes") && !gameView.gameOverUText.contains("#$id#")) {//man kontrollerar här om man har förlorat eftersom draw runnar även när man förlorar
+            myThread.stop = true//på så sätt stoppas thread när spelet stoppas: draw fortfarande runnar när spelet stoppas
+            myThread.time = loopTime
+            threadWasRunning = true
+            timeLeft = 10000f
+            gameView.gameOverUText += "#$id#"
+
         }
-        else {
-            if(threadWasRunning) {// och på så sätt är genereringen back in action när spelet startar igen
-                myThread = TimerThread(loopTime)
-                myThread.start()
-                if(gameView.score == 0)
-                    reset()
-                threadWasRunning = false
-            }
+        if(gameView.gameOverUText.contains("reset") && !gameView.gameOverUText.contains("#$id#")) {//man kontrollerar här om man har förlorat eftersom draw runnar även när man förlorar
+            reset()
+            myThread.time = loopTime
+            myThread.stop = false
+            gameView.gameOverUText += "#$id#"
         }
 
 

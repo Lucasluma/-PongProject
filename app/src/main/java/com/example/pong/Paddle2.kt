@@ -85,7 +85,18 @@ class Paddle2(aGameView: GameView2):Object() {
             detectBorderCollision()
         }
     }
+
+    override fun start() {
+
+    }
+
     private fun onCollision(collision: Object, collisionPosX: Float, collisionPosY: Float) {
+        if(collision.tag.contains("Enemy")) {
+            gameView.lives--
+            inCollisionObjects.remove(collision)
+            collision.tag = "remove"//på så sätt försvinner den på ett säkert sätt medans den removas på ett säkert sätt från listan
+            gameView.idsToRemove.add(collision.id)//så att den removas senare
+        }
     }
     private fun onExitCollision(collision: Object) {//när ett object som kolliderade innan går ut och slutar kollidera
     }
@@ -364,11 +375,11 @@ class Paddle2(aGameView: GameView2):Object() {
             }
             if(okToRemove)
                 inCollisionObjects.removeAt(posToRemove)
-            if(idsToRemove.indexOf(i) == idsToRemove.count() -1) {
-                idsToRemove = ArrayList()
-            }
-
+            //if(idsToRemove.indexOf(i) == idsToRemove.count() -1) {
+            //    idsToRemove = ArrayList()
+            //}
         }
+        idsToRemove = ArrayList()
 
     }
 

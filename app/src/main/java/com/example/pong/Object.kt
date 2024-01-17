@@ -16,5 +16,6 @@ abstract class Object {
 
     abstract var id:Int
     abstract fun update()
+    abstract fun start()
     abstract fun draw(canvas: Canvas)
 }
