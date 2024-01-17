@@ -29,16 +29,8 @@ class Paddle2(aGameView: GameView2):Object() {
 
     var idsToRemove: ArrayList<Int> = ArrayList()
 
-    private var isShooting: Boolean = false
 
 
-    fun startShooting() {
-        isShooting = true
-    }
-
-    fun stopShooting() {
-        isShooting = false
-    }
 
     init {
         gameView = aGameView
