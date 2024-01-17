@@ -66,6 +66,20 @@ class PongBall2(aGameView: GameView2):Object() {
         isBitmap = true
         gameView = aGameView
     }
+    override fun draw(canvas: Canvas) {
+        if(!isBitmap)
+            canvas?.drawCircle(posX,posY, size, paint)
+        else {
+            val aRect = RectF(posX - size, posY - size, posX + size , posY + size)//to draw the bitmap in a circle way
+            canvas.drawBitmap(bitmap, null, aRect, paint)
+        }
+        if(gameView.gameOverUText.contains("reset") && !gameView.gameOverUText.contains("#$id#")) {//man kontrollerar här om man har förlorat eftersom draw runnar även när man förlorar
+            resetGame()
+            println("bruh: ${gameView.gameOverUText}")
+            gameView.gameOverUText += "#$id#"
+        }
+
+    }
     override fun start() {
         gameView.objects.forEach{
             if(it is Paddle2){
@@ -136,7 +150,7 @@ class PongBall2(aGameView: GameView2):Object() {
                 val builder = AlertDialog.Builder(gameView.context, R.style.CustomAlertDialog)
 
                 builder.setMessage(Html.fromHtml("<font color='#988A0A'><b>You lose</b>" +
-                        "\n<b>Your score is:</b>"+" ${gameView.score}</b></font>"))
+                        "\n<b>Your score is:</b>" + " ${gameView.score}</b></font>"))
                     .setTitle("Game over")
                     .setCancelable(false)
                     .setPositiveButton("Save Score ") { dialog, _ ->
@@ -148,11 +162,6 @@ class PongBall2(aGameView: GameView2):Object() {
                         gameView.score = 0
                         gameView.gameOverUText = "reset"
                         gameView.stop = false
-
-
-                    }
-                val dialog = builder.create()
-
                         resetGame()
                     }
 
@@ -169,26 +178,9 @@ class PongBall2(aGameView: GameView2):Object() {
                 dialog.window?.setBackgroundDrawableResource(R.drawable.spaceship)
 
                 dialog.show()
-
             }
             gameView.stop = true
         }
-
-    }
-
-    override fun draw(canvas: Canvas) {
-        if(!isBitmap)
-            canvas?.drawCircle(posX,posY, size, paint)
-        else {
-            val aRect = RectF(posX - size, posY - size, posX + size , posY + size)//to draw the bitmap in a circle way
-            canvas.drawBitmap(bitmap, null, aRect, paint)
-        }
-        if(gameView.gameOverUText.contains("reset") && !gameView.gameOverUText.contains("#$id#")) {//man kontrollerar här om man har förlorat eftersom draw runnar även när man förlorar
-            resetGame()
-            println("bruh: ${gameView.gameOverUText}")
-            gameView.gameOverUText += "#$id#"
-        }
-
     }
 
     private fun ballBounce(collisionPosX: Float, collisionPosY: Float){
@@ -247,8 +239,8 @@ class PongBall2(aGameView: GameView2):Object() {
         speedY = sin((nextSpeedAngle/360)*(2* PI.toFloat())) * diagonalSpeed
 
     }
-     private fun resetGame(){
-         //bara enemyGenerator resettas själv i sig själv
+    private fun resetGame(){
+        //bara enemyGenerator resettas själv i sig själv
         gameView.objects.forEach{
             if(it.tag.contains("Enemy")){
                 gameView.idsToRemove.add(it.id)
@@ -390,4 +382,7 @@ class PongBall2(aGameView: GameView2):Object() {
             }
         }
     }
-}
+
+    }
+
+

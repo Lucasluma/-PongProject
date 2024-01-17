@@ -10,9 +10,11 @@ import android.graphics.Paint
 import android.graphics.Rect
 import android.os.Bundle
 import android.os.Looper
+import android.text.Html
 import android.view.MotionEvent
 import android.view.SurfaceHolder
 import android.view.SurfaceView
+import androidx.core.content.ContextCompat
 import androidx.core.graphics.scale
 import androidx.fragment.app.commit
 
@@ -30,10 +32,9 @@ class GameView2(context: Context): SurfaceView(context), SurfaceHolder.Callback,
     var stop = false
     var touchX: Float? = null
     var touchY: Float? = null
-
     var lives: Int = 3
-
     val mode = 2
+
     val enemyDrawables = arrayOf(R.drawable.spacecargo1_1, R.drawable.spacecargo1_2,
                                   R.drawable.spacemine1_1,R.drawable.spacenuke1_1)
     val pongBallDrawables = arrayOf(R.drawable.ball3, R.drawable.ball3_1,R.drawable.bomb1)
@@ -45,7 +46,9 @@ class GameView2(context: Context): SurfaceView(context), SurfaceHolder.Callback,
     val randomPaddle = (0 until paddleDrawables.size).random()
 
     private val random = (0..4).random()
-    var gameOverUText: String = "no"//den texten ändras när man förlorar till yes och object kan se att man har förlorat och sen adda deras Id i texten. Vilket man kollar om den finns i texten när man förlorar, så på så sätt objects kan göra saker för en gång när man förlorar
+    var gameOverUText: String = "no"//den texten ändras när man förlorar till yes och object kan se att man har förlorat
+    // och sen adda deras Id i texten. Vilket man kollar om den finns i texten när man förlorar,
+    // så på så sätt objects kan göra saker för en gång när man förlorar
 
 
     var idsToRemove: ArrayList<Int> = ArrayList()
@@ -59,8 +62,6 @@ class GameView2(context: Context): SurfaceView(context), SurfaceHolder.Callback,
     private var background1: Bitmap = BitmapFactory.decodeResource(resources, imgId[random])
 
 
-
-   // private var background1: Bitmap = BitmapFactory.decodeResource(context.resources, R.drawable.planetearth)
     var mutablebackground = background1.copy(Bitmap.Config.ARGB_8888, true)
        .scale(getScreenWidth(), getScreenHeight())
 
@@ -95,34 +96,16 @@ class GameView2(context: Context): SurfaceView(context), SurfaceHolder.Callback,
             mHolder?.addCallback(this)
         }
 
-        //objects.add(Enemy(this, "Enemy", 300f, 100f, 5f,
-        //    14f,50f,BitmapFactory.decodeResource(context.resources, R.drawable.spacecargo)))
-        objects.add(PongBall2(this, "PongBall", 300f, 100f, 5f,
+
+        objects.add(PongBall2(this, "PongBall", 300f, 100f, 6f,
             8f,50f,BitmapFactory.decodeResource(context.resources, R.drawable.ball3)))
-        objects.add(Paddle2(this, "Paddle", 300f, 1400f, 0f,
-            0f,300f,50f,BitmapFactory.decodeResource(context.resources, R.drawable.beampaddle2)))
-        objects.add(EnemyGenerator(this, 6500f, 4f, 200f, 500f, 200f))
 
+        objects.add(Paddle2(this, "Paddle", 300f, 2200f, 0f,
+            0f,300f,50f,
+            BitmapFactory.decodeResource(context.resources, R.drawable.beampaddle2)))
 
-
-       objects.add(EnemyGenerator(this, 6000f, 3f,
-                                150f, 300f, 75f))
-
-        objects.add(
-            PongBall2(
-                this, "PongBall", 300f, 100f, 5f,
-                14f, 50f, BitmapFactory.decodeResource(context.resources, pongBallDrawables[randomPongBall])
-            )
-        )
-        objects.add(
-            Paddle2(
-                this, "Paddle", 300f,  2200f, 0f,
-                0f, 400f, 75f, BitmapFactory.decodeResource(context.resources, paddleDrawables[randomPaddle])
-            )
-        )
-
-
-
+        objects.add(EnemyGenerator(this, 6500f, 5f,
+            200f, 500f, 200f))
 
     }
 
@@ -204,8 +187,11 @@ class GameView2(context: Context): SurfaceView(context), SurfaceHolder.Callback,
             gameOverUText = "yes"
             val handler = android.os.Handler(Looper.getMainLooper())
             handler.post {
-                val builder = AlertDialog.Builder(context)
-                builder.setMessage("You lose \nYour score is: ${score}")
+                val builder = AlertDialog.Builder(context, R.style.CustomAlertDialog)
+
+                builder.setMessage(
+                    Html.fromHtml("<font color='#988A0A'><b>You lose</b>" +
+                        "\n<b>Your score is:</b>" + " ${score}</b></font>"))
                     .setTitle("Game over")
                     .setCancelable(false)
                     .setPositiveButton("Save Score "){dialog, _ ->
@@ -222,6 +208,17 @@ class GameView2(context: Context): SurfaceView(context), SurfaceHolder.Callback,
                         gameOverUText = "reset"
                     }
                 val dialog = builder.create()
+
+                dialog.setOnShowListener {
+                    val saveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
+                    val replayButton = dialog.getButton(AlertDialog.BUTTON_NEGATIVE)
+
+                    saveButton.setTextColor(ContextCompat.getColor(context,R.color.yellowgold))
+                    replayButton.setTextColor(ContextCompat.getColor(context, R.color.yellowgold))
+                }
+
+                dialog.window?.setBackgroundDrawableResource(R.drawable.spaceship)
+
                 dialog.show()
             }
             stop = true
