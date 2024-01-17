@@ -6,7 +6,7 @@ import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.RectF
 import android.os.Looper
-import java.util.logging.Handler
+import androidx.core.content.ContextCompat
 import kotlin.math.PI
 import kotlin.math.abs
 import kotlin.math.cos
@@ -98,6 +98,8 @@ class PongBall(aGameView: GameView):Object() {
 
     }
 
+
+
     private fun increaseDifficulty(){
 
         if(gameView.score == 10 && !firstIncrease) {
@@ -117,6 +119,7 @@ class PongBall(aGameView: GameView):Object() {
         }
 
     }
+
     private fun onCollision(collision: Object, collisionPosX: Float, collisionPosY: Float) {//när ett object kolliderar
         if(collision.tag.contains("Ball") || collision.tag.contains("Rect")) {
             ballBounce(collisionPosX, collisionPosY)
@@ -143,7 +146,8 @@ class PongBall(aGameView: GameView):Object() {
             val handler = android.os.Handler(Looper.getMainLooper())
             posY = 100f
             handler.post {
-                val builder = AlertDialog.Builder(gameView.context)
+               // val builder = AlertDialog.Builder(gameView.context
+                    val builder = AlertDialog.Builder(gameView.context, R.style.CustomAlertDialog)
                 builder.setMessage("You lose \nYour score is: ${gameView.score}")
                     .setTitle("Game over")
                     .setCancelable(false)
@@ -154,7 +158,7 @@ class PongBall(aGameView: GameView):Object() {
 
                     }
 
-                    .setNegativeButton("ok"){dialog, _ ->
+                    .setNegativeButton("Replay"){dialog, _ ->
                         dialog.dismiss()
                         gameView.score = 0
                         gameView.stop = false
@@ -164,10 +168,20 @@ class PongBall(aGameView: GameView):Object() {
                         speedY = originalSpeedY
                         speedX = originalSpeedX
                     }
-
-
-
                 val dialog = builder.create()
+                dialog.setOnShowListener {
+                    val saveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
+                    val replayButton = dialog.getButton(AlertDialog.BUTTON_NEGATIVE)
+
+                    saveButton.setTextColor(ContextCompat.getColor(gameView.context, R.color.yellowgold))
+                    replayButton.setTextColor(ContextCompat.getColor(gameView.context, R.color.yellowgold))
+                }
+
+
+
+
+
+                dialog.window?.setBackgroundDrawableResource(R.drawable.spaceship)
                 dialog.show()
 
             }

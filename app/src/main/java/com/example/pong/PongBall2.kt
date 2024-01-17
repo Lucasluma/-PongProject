@@ -6,6 +6,8 @@ import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.RectF
 import android.os.Looper
+import android.text.Html
+import androidx.core.content.ContextCompat
 import kotlin.math.PI
 import kotlin.math.abs
 import kotlin.math.cos
@@ -130,30 +132,48 @@ class PongBall2(aGameView: GameView2):Object() {
             gameView.gameOverUText = "yes"
             val handler = android.os.Handler(Looper.getMainLooper())
             handler.post {
-                val builder = AlertDialog.Builder(gameView.context)
-                builder.setMessage("You lose \nYour score is: ${gameView.score}")
+
+                val builder = AlertDialog.Builder(gameView.context, R.style.CustomAlertDialog)
+
+                builder.setMessage(Html.fromHtml("<font color='#988A0A'><b>You lose</b>" +
+                        "\n<b>Your score is:</b>"+" ${gameView.score}</b></font>"))
                     .setTitle("Game over")
                     .setCancelable(false)
-                    .setPositiveButton("Save Score "){dialog, _ ->
-
+                    .setPositiveButton("Save Score ") { dialog, _ ->
                         gameView.saveScore()
                         dialog.dismiss()
-
                     }
-
-                    .setNegativeButton("Replay"){dialog, _ ->
+                    .setNegativeButton("Replay") { dialog, _ ->
                         dialog.dismiss()
                         gameView.score = 0
                         gameView.gameOverUText = "reset"
                         gameView.stop = false
 
+
                     }
                 val dialog = builder.create()
+
+                        resetGame()
+                    }
+
+                val dialog = builder.create()
+
+                dialog.setOnShowListener {
+                    val saveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
+                    val replayButton = dialog.getButton(AlertDialog.BUTTON_NEGATIVE)
+
+                    saveButton.setTextColor(ContextCompat.getColor(gameView.context, R.color.yellowgold))
+                    replayButton.setTextColor(ContextCompat.getColor(gameView.context, R.color.yellowgold))
+                }
+
+                dialog.window?.setBackgroundDrawableResource(R.drawable.spaceship)
+
                 dialog.show()
 
             }
             gameView.stop = true
         }
+
     }
 
     override fun draw(canvas: Canvas) {

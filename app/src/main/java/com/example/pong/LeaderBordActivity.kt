@@ -1,13 +1,14 @@
 package com.example.pong
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.provider.ContactsContract.Data
-import android.widget.LinearLayout
+import android.view.animation.AnimationUtils
+import android.widget.ImageView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.pong.databinding.ActivityLeaderBordBinding
 
 class LeaderBordActivity : AppCompatActivity() {
+
 
     lateinit var binder : ActivityLeaderBordBinding
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -18,6 +19,9 @@ class LeaderBordActivity : AppCompatActivity() {
 
         val recyclerView = binder.lbRecyclerView
         recyclerView.layoutManager = LinearLayoutManager(this)
+
+
+
 
 
        binder.btnLbM1.setOnClickListener {
@@ -37,5 +41,11 @@ class LeaderBordActivity : AppCompatActivity() {
             recyclerView.adapter = adapter1
 
         }
+
+        // Apply the animation to the ImageView
+        val imageView = findViewById<ImageView>(R.id.flyin)
+        val flyAnimation = AnimationUtils.loadAnimation(this, R.anim.flyin_ship)
+        imageView.startAnimation(flyAnimation)
     }
+
 }
