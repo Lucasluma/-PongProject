@@ -99,6 +99,7 @@ class Paddle2(aGameView: GameView2):Object() {
         }
     }
     private fun onExitCollision(collision: Object) {//när ett object som kolliderade innan går ut och slutar kollidera
+
     }
     private fun detectBorderCollision() {
         if (posX <= 0) {//Left

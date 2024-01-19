@@ -31,7 +31,12 @@ class GameView2(context: Context): SurfaceView(context), SurfaceHolder.Callback,
     var stop = false
     var touchX: Float? = null
     var touchY: Float? = null
+
     var lives: Int = 3
+    var skillCounter: Int = 3
+    var skillPosition: Float = 0f
+
+
     private val random = (0..4).random()
     var gameOverUText: String = "no"//den texten ändras när man förlorar till yes och object kan se att man har förlorat och sen adda deras Id i texten. Vilket man kollar om den finns i texten när man förlorar, så på så sätt objects kan göra saker för en gång när man förlorar
 
@@ -100,6 +105,9 @@ class GameView2(context: Context): SurfaceView(context), SurfaceHolder.Callback,
         running = true
         thread = Thread(this)
         thread?.start()
+        objects.forEach{
+            it.start()
+        }
     }
 
     fun stop(){
@@ -147,6 +155,7 @@ class GameView2(context: Context): SurfaceView(context), SurfaceHolder.Callback,
             }
 
             lives(canvas, textPaint)//metoden som tar hand om liv
+            skills(canvas)
 
             canvas.drawText("Score: $score", 100f, 100f, textPaint)
             canvas.drawText("Best Ever: $bestScore",  limit.right - 350f, 100f, textPaint)
@@ -156,7 +165,9 @@ class GameView2(context: Context): SurfaceView(context), SurfaceHolder.Callback,
             currentHolder.unlockCanvasAndPost(canvas)
         }
     }
+    fun skills(canvas: Canvas){
 
+    }
     fun lives(canvas: Canvas, paint: Paint) {
         //black heart: 🖤    red heard: ❤️
         if(lives == 3)
